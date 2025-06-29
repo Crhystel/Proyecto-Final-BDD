@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Eliminar inscripcion</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      background: 
+        linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+        url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+      background-size: cover;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #6a1b9a;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: white;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #e74c3c;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #c0392b;
+    }
+
+    a {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 14px;
+      background-color: #6a1b9a;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    a:hover {
+      background-color: #4a148c;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 22px;
+      }
+
+      form {
+        padding: 20px 15px;
+      }
+
+      button, a {
+        font-size: 14px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+<h1>¿Estás seguro de que deseas eliminar esta inscripción?</h2>
+
+<form method="POST">
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{{ url_for('inscripcion.index') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+</body>
+</html>

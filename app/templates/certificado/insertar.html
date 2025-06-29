@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Nuevo Certificado</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      background: 
+        linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+        url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+      background-size: cover;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #ad1457;
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: white;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(173, 20, 87, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    label {
+      text-align: left;
+      font-weight: 600;
+      color: #880e4f;
+      font-size: 14px;
+    }
+
+    input, select {
+      padding: 12px 14px;
+      border: 1.8px solid #f48fb1;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #ad1457;
+      box-shadow: 0 0 8px #ad1457;
+    }
+
+    .botones {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 8px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    button {
+      background-color: #ad1457;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #880e4f;
+    }
+
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      form {
+        padding: 20px 15px;
+      }
+
+      input, select {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      button, .cancelar {
+        font-size: 14px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Nuevo Certificado</h1>
+  <form method="POST">
+    <div>
+      <label for="contenido">Contenido:</label>
+      <input type="text" name="contenido" required>
+    </div>
+
+    <div>
+      <label for="fecha_emision">Fecha de Emisión:</label>
+      <input type="date" name="fecha_emision" required>
+    </div>
+
+    <div>
+      <label for="id_inscripcion">ID de Inscripción:</label>
+      <select name="id_inscripcion" required>
+        {% for insc in inscripciones %}
+          <option value="{{ insc.id_inscripcion }}">{{ insc.id_inscripcion }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="botones">
+      <button type="submit">Guardar</button>
+    </div>
+  </form>
+</body>
+</html>

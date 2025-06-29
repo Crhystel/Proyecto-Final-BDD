@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Página{% endblock %}</title>
+</head>
+<body>
+
+    <header>
+        <h1>Sistema de Catequesis</h1>
+        <button onclick="window.location.href='/home'">Volver a la página principal</button>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Aquí se insertará el contenido de cada página hija -->
+        {% endblock %}
+    </main>
+
+</body>
+</html>

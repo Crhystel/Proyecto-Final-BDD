@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión - Catequesis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #e91e63;
+      --secondary-color: #9c27b0;
+      --white: #ffffff;
+      --text-color: #3c3c3c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: 
+     
+      linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+      url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 40px;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1.5px solid var(--primary-color);
+      border-radius: 8px;
+      font-size: 16px;
+      color: var(--text-color);
+      background-color: #fff5fa;
+      transition: 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      background-color: #fce9f4;
+    }
+
+    button {
+      width: 100%;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 15px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button:hover {
+      background: var(--secondary-color);
+    }
+
+    .error-message {
+      color: #d32f2f;
+      margin-top: 15px;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="logo">✝️</div>
+    <h2>Bienvenido</h2>
+    <form method="post">
+      <input type="text" name="nombre" placeholder="Usuario" value="admin" required>
+      <input type="password" name="contrasena" placeholder="Contraseña" required>
+      <button type="submit">Entrar</button>
+    </form>
+    {% if error %}
+    <p class="error-message">{{ error }}</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>
+

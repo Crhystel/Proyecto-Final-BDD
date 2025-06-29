@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Eliminar Nivel de Catequesis</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      background: 
+        linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+        url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+      background-size: cover;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #c2185b;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: white;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    button {
+      padding: 14px;
+      background-color: #e53935;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #c62828;
+    }
+
+    a {
+      padding: 14px;
+      background-color: #8e44ad;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+      display: inline-block;
+    }
+
+    a:hover {
+      background-color: #732d91;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 22px;
+      }
+
+      form {
+        padding: 20px;
+      }
+
+      button, a {
+        font-size: 14px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>¿Estás seguro que deseas eliminar este nivel de catequesis?</h1>
+  <form method="post">
+    <button type="submit">Eliminar</button>
+    <a href="{{ url_for('nivel.index') }}">Cancelar</a>
+  </form>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Catequizandos</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      background: 
+      linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+      url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+      background-size: cover;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #7b1fa2;
+      font-size: 32px;
+      margin-bottom: 30px;
+      text-shadow: 0 1px 3px rgba(123, 31, 162, 0.6);
+    }
+
+    .boton-insertar, .boton-regreso {
+      display: inline-block;
+      padding: 12px 24px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(142, 68, 173, 0.7);
+      margin-right: 15px;
+    }
+
+    .boton-insertar {
+      background-color: #8e44ad;
+    }
+    .boton-regreso {
+      background-color: #bab3bd;
+    }
+
+    .boton-insertar:hover, .boton-regreso:hover {
+      background-color: #d81b60;
+      box-shadow: 0 5px 15px rgba(216, 27, 96, 0.8);
+    }
+
+    table {
+      margin: auto;
+      width: 95%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 5px 18px rgba(142, 68, 173, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border: 1px solid #e1bee7;
+      font-size: 15px;
+    }
+
+    th {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .acciones a {
+      display: inline-block;
+      padding: 8px 14px;
+      margin: 2px;
+      text-decoration: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .acciones a:first-child {
+      background-color: #8e44ad;
+      box-shadow: 0 3px 8px rgba(142, 68, 173, 0.6);
+    }
+
+    .acciones a:first-child:hover {
+      background-color: #6a1b9a;
+      box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
+    }
+
+    .acciones a:last-child {
+      background-color: #d81b60;
+      box-shadow: 0 3px 8px rgba(216, 27, 96, 0.6);
+    }
+
+    .acciones a:last-child:hover {
+      background-color: #ad1457;
+      box-shadow: 0 4px 14px rgba(173, 20, 87, 0.8);
+    }
+
+    @media (max-width: 768px) {
+      table, th, td {
+        font-size: 13px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .boton-insertar, .boton-regreso {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .acciones a {
+        padding: 6px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Catequizandos</h1>
+
+  <!-- Botones -->
+  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('catequizando.insertar') }}" class="boton-insertar">+ Insertar nuevo catequizando</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Fecha Nac.</th>
+        <th>Doc. Identidad</th>
+        <th>Fecha Registro</th>
+        <th>Bautizado</th>
+        <th>Parroquia</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in catequizandos %}
+      <tr>
+        <td>{{ c.id_catequizando }}</td>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.apellido }}</td>
+        <td>{{ c.fecha_nacimiento }}</td>
+        <td>{{ c.documento_identidad }}</td>
+        <td>{{ c.fecha_registro }}</td>
+        <td>{{ 'Sí' if c.bautizado == 'S' else 'No' }}</td>
+        <td>{{ c.id_parroquia or '—' }}</td>
+        <td class="acciones">
+          <a href="{{ url_for('catequizando.actualizar', id=c.id_catequizando) }}">Editar</a>
+          <a href="{{ url_for('catequizando.eliminar', id=c.id_catequizando) }}">Eliminar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Catequista</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      background: 
+      linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+      url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .formulario {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 5px 18px rgba(142, 68, 173, 0.2);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #7b1fa2;
+      margin-bottom: 25px;
+      text-shadow: 0 1px 3px rgba(123, 31, 162, 0.4);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      text-align: left;
+      color: #6a1b9a;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      border: 1px solid #e1bee7;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #8e44ad;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(142, 68, 173, 0.7);
+    }
+
+    button:hover {
+      background-color: #6a1b9a;
+      box-shadow: 0 5px 15px rgba(106, 27, 154, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <div class="formulario">
+    <h1>Registrar Catequista</h1>
+    <form method="post">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" placeholder="Nombre" required>
+
+      <label for="apellido">Apellido</label>
+      <input id="apellido" name="apellido" placeholder="Apellido" required>
+
+      <label for="correo">Correo electrónico</label>
+      <input id="correo" name="correo" placeholder="Correo electrónico" required>
+
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" name="telefono" placeholder="Teléfono" required>
+
+      <label for="rol">Rol</label>
+      <select id="rol" name="rol">
+        <option value="P">Principal</option>
+        <option value="A">Ayudante</option>
+      </select>
+
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</body>
+</html>
