@@ -1,7 +1,9 @@
+
 {
-  "name_server": "DESKTOP-AL02HET\\SQLEXPRESS01",
-  "database": "SistemaCatequesisQuito",
-  "username": "CVCGrupo1",
-  "password": "CVCGrupo1",
-  "controlador_odbc": "SQL Server"
+  "mongodb": {
+    "uri_template": "mongodb+srv://Crhystel:123456789Crhystel@clusterudla01.pywk9ih.mongodb.net/",
+    "database": "SistemaCatequesisQuito",
+    "username": "Crhystel",
+    "password": "123456789Crhystel"
+  }
 }

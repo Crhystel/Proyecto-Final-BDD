@@ -1,15 +1,31 @@
+from pymongo import MongoClient
 import json
-import pyodbc
+import os
 
-with open('config.json', 'r', encoding='utf-8') as f:
-    config = json.load(f)
+_db_instance=None
 
-def get_connection():
-    connection_string = (
-        f"DRIVER={{{config['controlador_odbc']}}};"
-        f"SERVER={config['name_server']};"
-        f"DATABASE={config['database']};"
-        f"UID={config['username']};"
-        f"PWD={config['password']}"
-    )
-    return pyodbc.connect(connection_string)
+def get_db_connection():
+    global _db_instance
+    
+    if _db_instance is not None:
+        return _db_instance
+    try:
+        config_path= os.path.join(os.path.dirname(os.path.abspath(__file__)),'config.json')
+        with open(config_path) as config_file:
+            config=json.load(config_file)['mongodb']
+            uri_template = config['uri_template']
+            db_name = config['database']
+            username = config['username']
+            password = config['password']
+            uri = uri_template.format(
+            username=username,
+            password=password,
+            database=db_name
+        )
+            client = MongoClient(uri, serverSelectionTimeoutMS=5000)
+            _db_instance = client[db_name]
+        return _db_instance
+    except Exception as e:
+        print(f"Ocurrió un error inesperado al conectar a la base de datos: {e}")
+        return None
+    db = get_db_connection()
