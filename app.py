@@ -11,7 +11,6 @@ app = Flask(__name__,
             static_folder="static", 
             template_folder=os.path.join("app", "templates"))
 
-# Configura la clave secreta para las sesiones
 app.secret_key = 'e9cd3e16efd30433a17ab00a1432daa1be5eb5f4760f8a38'
 
 bcrypt.init_app(app)
@@ -25,18 +24,21 @@ app.register_blueprint(usuario_bp,url_prefix='/usuarios')
 @app.route('/')
 def index_route():
     if 'usuario_nombre' in session:
-        return redirect(url_for('home'))
+        if session.get('rol')=='A':
+            return redirect(url_for('bienvenida'))
+        else:
+            return redirect(url_for('bienvenida_general'))
     return redirect(url_for('auth.login'))
 
-@app.route('/home')
-def home():
+@app.route('/bienvenida')
+def bienvenida():
     if 'usuario_nombre' not in session:
         flash("Por favor, iniciar sesión para continuar.", "info")
         return redirect(url_for('auth.login'))
-    
-    return render_template('home.html', 
-                           usuario=session['usuario_nombre'], 
-                           rol=session['rol'])
+    if session.get('rol')!='A':
+        flash("Acceso no autorizado", "warning")
+        return redirect(url_for('bienvenida_general'))
+    return render_template('bienvenida.html')
 
 @app.route('/bienvenida_general')
 def bienvenida_general():
@@ -44,11 +46,7 @@ def bienvenida_general():
         flash("Por favor, inicia sesión para continuar.", "info")
         return redirect(url_for('auth.login'))
         
-    return render_template('bienvenidageneral.html', 
-                           usuario=session['usuario_nombre'], 
-                           rol=session['rol'])
+    return render_template('bienvenidageneral.html')
 
-# --- 4. EJECUCIÓN DE LA APLICACIÓN ---
 if __name__ == '__main__':
-    # Asegúrate de que tu base de datos está disponible antes de correr
     app.run(debug=True)

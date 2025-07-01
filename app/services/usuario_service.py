@@ -26,7 +26,6 @@ def crear_usuario_service(nombre, contrasena_plana, rol):
 
 def obtener_usuarios_service():
     db = get_db_connection()
-    # Usamos proyección para no enviar nunca el hash de la contraseña al cliente
     return list(db.usuarios.find({}, {"contrasena": 0}))
 
 def obtener_usuario_por_id_service(id_usuario):

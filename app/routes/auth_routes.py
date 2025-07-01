@@ -9,7 +9,7 @@ auth_bp = Blueprint('auth', __name__)
 def login():
     # Si el usuario ya está en sesión, redirigirlo
     if 'usuario' in session:
-        return redirect(url_for('home')) # Asumiendo que 'home' es tu página principal post-login
+        return redirect(url_for('bienvenida'))
 
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -27,7 +27,7 @@ def login():
             flash(f"Bienvenido de vuelta, {usuario['nombre']}!", "success")
 
             if usuario['rol'] == 'A':
-                return redirect(url_for('home')) # Redirige a la página de admin
+                return redirect(url_for('bienvenida')) # Redirige a la página de admin
             else:
                 return redirect(url_for('bienvenida_general')) # O a una página general
         
@@ -44,15 +44,3 @@ def logout():
     flash('Has cerrado la sesión exitosamente.', 'info')
     return redirect(url_for('auth.login'))
 
-# Ejemplo de ruta para una página principal
-@auth_bp.route('/home')
-def home():
-    if 'usuario_nombre' not in session:
-        return redirect(url_for('auth.login'))
-    return f"<h1>Página de inicio para {session['usuario_nombre']}</h1><a href='/logout'>Cerrar sesión</a>"
-
-@auth_bp.route('/bienvenida')
-def bienvenida_general():
-    if 'usuario_nombre' not in session:
-        return redirect(url_for('auth.login'))
-    return f"<h1>Bienvenido, {session['usuario_nombre']}</h1><a href='/logout'>Cerrar sesión</a>"
