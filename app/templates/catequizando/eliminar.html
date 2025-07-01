@@ -95,8 +95,10 @@
   </style>
 </head>
 <body>
-  <h1>¿Eliminar este catequista?</h1>
-  <form method="post">
+  <h1>¿Seguro que deseas eliminar a {{ catequizando.nombre }} {{ catequizando.apellido }}?</h1>
+  <p style="color: #c0392b; font-weight: bold;">Esta acción no se puede deshacer.</p>
+  
+  <form method="post" action="{{ url_for('catequizando.eliminar', id=catequizando._id) }}">
     <button type="submit">Sí, eliminar</button>
     <a href="{{ url_for('catequizando.index') }}">Cancelar</a>
   </form>

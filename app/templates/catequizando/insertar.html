@@ -122,17 +122,16 @@
     <label for="fecha_registro">Fecha de registro:</label>
     <input id="fecha_registro" name="fecha_registro" type="date" required />
 
-    <label for="bautizado">Bautizado:</label>
-    <select id="bautizado" name="bautizado">
-      <option value="S">Sí</option>
-      <option value="N">No</option>
-    </select>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <input id="bautizado" name="bautizado" type="checkbox" style="width: auto;">
+        <label for="bautizado" style="margin-bottom: 0;">¿Está bautizado?</label>
+    </div>
 
     <label for="id_parroquia">Parroquia:</label>
     <select id="id_parroquia" name="id_parroquia" required>
       <option value="">-- Seleccione una parroquia --</option>
       {% for parroquia in parroquias %}
-        <option value="{{ parroquia.id_parroquia }}">{{ parroquia.nombre }}</option>
+        <option value="{{ parroquia._id }}">{{ parroquia.nombre }}</option>
       {% endfor %}
     </select>
 

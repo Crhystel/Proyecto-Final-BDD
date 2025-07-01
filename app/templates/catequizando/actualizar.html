@@ -99,19 +99,40 @@
 <body>
   <h1>Actualizar Catequizando</h1>
 
-  <form method="post">
-    <input type="text" name="nombre" value="{{ catequizando.nombre }}" required placeholder="Nombre" />
-    <input type="text" name="apellido" value="{{ catequizando.apellido }}" required placeholder="Apellido" />
-    <input type="date" name="fecha_nacimiento" value="{{ catequizando.fecha_nacimiento }}" required />
-    <input type="text" name="documento_identidad" value="{{ catequizando.documento_identidad }}" required placeholder="Documento de identidad" />
-    <input type="date" name="fecha_registro" value="{{ catequizando.fecha_registro }}" required />
+   <form method="post">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" value="{{ catequizando.nombre }}" required placeholder="Nombre" />
     
-    <select name="bautizado" required>
-      <option value="S" {% if catequizando.bautizado == 'S' %}selected{% endif %}>Sí</option>
-      <option value="N" {% if catequizando.bautizado == 'N' %}selected{% endif %}>No</option>
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" name="apellido" value="{{ catequizando.apellido }}" required placeholder="Apellido" />
+    
+    <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+    <!-- Formateamos la fecha para el input type="date" -->
+    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ catequizando.fecha_nacimiento.strftime('%Y-%m-%d') }}" required />
+    
+    <label for="documento_identidad">Documento de identidad:</label>
+    <input type="text" id="documento_identidad" name="documento_identidad" value="{{ catequizando.documento_identidad }}" required placeholder="Documento de identidad" />
+    
+    <label for="fecha_registro">Fecha de registro:</label>
+    <input type="date" id="fecha_registro" name="fecha_registro" value="{{ catequizando.fecha_registro.strftime('%Y-%m-%d') }}" required />
+    
+    <!-- Checkbox para el campo bautizado, leyendo del sub-documento ficha_datos -->
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <input type="checkbox" id="bautizado" name="bautizado" style="width: auto;" {% if catequizando.ficha_datos and catequizando.ficha_datos.tiene_bautismo %}checked{% endif %}>
+        <label for="bautizado" style="margin-bottom: 0;">¿Está bautizado?</label>
+    </div>
+    
+    <label for="id_parroquia">Parroquia:</label>
+    <select id="id_parroquia" name="id_parroquia">
+        <option value="">-- Seleccione una parroquia --</option>
+        {% for parroquia in parroquias %}
+            <!-- Lógica para marcar como 'selected' la parroquia actual del catequizando -->
+            <option value="{{ parroquia._id }}" 
+                    {% if catequizando.parroquia_ref and catequizando.parroquia_ref == parroquia._id %}selected{% endif %}>
+                {{ parroquia.nombre }}
+            </option>
+        {% endfor %}
     </select>
-    
-    <input type="text" name="id_parroquia" value="{{ catequizando.id_parroquia or '' }}" placeholder="ID Parroquia" />
 
     <button type="submit">Actualizar</button>
   </form>

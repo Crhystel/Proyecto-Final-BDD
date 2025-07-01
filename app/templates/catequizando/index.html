@@ -157,17 +157,17 @@
     <tbody>
       {% for c in catequizandos %}
       <tr>
-        <td>{{ c.id_catequizando }}</td>
+        <td>{{ c._id }}</td>
         <td>{{ c.nombre }}</td>
         <td>{{ c.apellido }}</td>
         <td>{{ c.fecha_nacimiento }}</td>
         <td>{{ c.documento_identidad }}</td>
         <td>{{ c.fecha_registro }}</td>
         <td>{{ 'Sí' if c.bautizado == 'S' else 'No' }}</td>
-        <td>{{ c.id_parroquia or '—' }}</td>
+        <td>{{ c.nombre_parroquia or '—' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('catequizando.actualizar', id=c.id_catequizando) }}">Editar</a>
-          <a href="{{ url_for('catequizando.eliminar', id=c.id_catequizando) }}">Eliminar</a>
+          <a href="{{ url_for('catequizando.actualizar', id=c._id) }}">Editar</a>
+          <a href="{{ url_for('catequizando.eliminar', id=c._id) }}">Eliminar</a>
         </td>
       </tr>
       {% endfor %}
