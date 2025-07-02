@@ -135,7 +135,7 @@
 </head>
 <body>
   <h1>Usuarios</h1>
-  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
   <a href="{{ url_for('usuario.insertar') }}" class="boton-insertar">+ Crear nuevo usuario</a>
 
   <table>
@@ -150,12 +150,12 @@
     <tbody>
       {% for u in usuarios %}
       <tr>
-        <td>{{ u.id_usuario }}</td>
+        <td>{{ u._id }}</td>
         <td>{{ u.nombre }}</td>
         <td>{{ 'Admin' if u.rol == 'A' else 'Usuario' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('usuario.actualizar', id=u.id_usuario) }}" class="editar">Editar</a>
-          <a href="{{ url_for('usuario.eliminar', id=u.id_usuario) }}" class="eliminar">Eliminar</a>
+          <a href="{{ url_for('usuario.actualizar', id=u._id) }}" class="editar">Editar</a>
+          <a href="{{ url_for('usuario.eliminar', id=u._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
       {% endfor %}

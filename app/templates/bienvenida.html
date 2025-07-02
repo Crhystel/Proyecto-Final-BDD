@@ -96,21 +96,20 @@
     <div class="subtitle">Sigue los pasos en orden. Cada paso desbloquea el siguiente.</div>
 
     <div class="links">
-      <button onclick="nextStep(1)">1. Crear Parroquias Principales</button>
-      <button onclick="nextStep(2)" disabled>2. Crear Parroquias</button>
-      <button onclick="nextStep(3)" disabled>3. Crear Usuarios</button>
-      <button onclick="nextStep(4)" disabled>4. Crear Catequistas</button>
-      <button onclick="nextStep(5)" disabled>5. Crear Catequizandos</button>
-      <button onclick="nextStep(6)" disabled>6. Crear Ficha de Datos</button>
-      <button onclick="nextStep(7)" disabled>7. Crear Libros</button>
-      <button onclick="nextStep(8)" disabled>8. Crear Tipo de Sacramento</button>
-      <button onclick="nextStep(9)" disabled>9. Crear Nivel</button>
-      <button onclick="nextStep(10)" disabled>10. Crear Ciclo</button>
-      <button onclick="nextStep(11)" disabled>11. Crear Grupo</button>
-      <button onclick="nextStep(12)" disabled>12. Unir Catequistas a un Grupo</button>
-      <button onclick="nextStep(13)" disabled>13. Crear Inscripciones</button>
-      <button onclick="nextStep(14)" disabled>14. Crear Padres de Familia y Padrinos</button>
-      <button onclick="nextStep(15)" disabled>15. Generar un certificado</button>
+      <button onclick="nextStep(1)" disabled>1. Crear Parroquias</button>
+      <button onclick="nextStep(2)" disabled>2. Crear Usuarios</button>
+      <button onclick="nextStep(3)" disabled>3. Crear Catequistas</button>
+      <button onclick="nextStep(4)" disabled>4. Crear Catequizandos</button>
+      <button onclick="nextStep(5)" disabled>5. Crear Ficha de Datos</button>
+      <button onclick="nextStep(6)" disabled>6. Crear Libros</button>
+      <button onclick="nextStep(7)" disabled>7. Crear Tipo de Sacramento</button>
+      <button onclick="nextStep(8)" disabled>8. Crear Nivel</button>
+      <button onclick="nextStep(9)" disabled>9. Crear Ciclo</button>
+      <button onclick="nextStep(10)" disabled>10. Crear Grupo</button>
+      <button onclick="nextStep(11)" disabled>11. Unir Catequistas a un Grupo</button>
+      <button onclick="nextStep(12)" disabled>12. Crear Inscripciones</button>
+      <button onclick="nextStep(13)" disabled>13. Crear Padres de Familia y Padrinos</button>
+      <button onclick="nextStep(14)" disabled>14. Generar un certificado</button>
     </div>
   </div>
 
@@ -119,7 +118,6 @@
     document.addEventListener("DOMContentLoaded", () => {
       const from = document.referrer;
       const isInternal = from.includes(window.location.origin) && (
-        from.includes("/parroquias/") ||
         from.includes("/parroquia/") ||
         from.includes("/usuarios/") ||
         from.includes("/catequistas/") ||
@@ -160,8 +158,7 @@
       }
   
       // Redirige a la página correspondiente
-      const routes = [
-        "/parroquias/", "/parroquia/", "/usuarios/", "/catequistas/", "/catequizandos/",
+      const routes = [ "/parroquia/", "/usuarios/", "/catequistas/", "/catequizandos/",
         "/fichas/", "/libros/", "/tipos_sacramento/", "/niveles/", "/ciclos/",
         "/grupos/", "/grupos_catequistas/", "/inscripciones/", "/personas/" , "/certificados/"
       ];

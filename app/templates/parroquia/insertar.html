@@ -103,11 +103,11 @@
     <input name="ciudad" placeholder="Ciudad" required />
     <input name="telefono" placeholder="Teléfono" />
     <input name="correo" placeholder="Correo electrónico" />
-
-    <select name="id_parroquia_principal" required>
-      <option value="">Seleccione una parroquia principal</option>
+    <label for="id_parroquia_principal">Parroquia Principal (dejar en blanco si esta es una)</label>
+    <select id="id_parroquia_principal" name="id_parroquia_principal" required>
+      <option value="">Esta es una parroquia Principal</option>
       {% for pp in parroquias_principales %}
-        <option value="{{ pp.id_parroquia_principal }}">{{ pp.nombre }}</option>
+        <option value="{{ pp._id}}">{{ pp.nombre }}</option>
       {% endfor %}
     </select>
 

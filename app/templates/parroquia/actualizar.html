@@ -98,7 +98,15 @@
       <input id="correo" name="correo" value="{{ parroquia.correo_electronico }}">
 
       <label for="id_parroquia_principal">ID Parroquia Principal</label>
-      <input id="id_parroquia_principal" name="id_parroquia_principal" value="{{ parroquia.id_parroquia_principal }}">
+      <select id="id_parroquia_principal" name="id_parroquia_principal">
+        <option value="">Ninguna (Es una Parroquia Principal)</option>
+        {% for pp in parroquias_principales %}
+          <option value="{{pp._id}}"
+            {% if parroquia.parroquia_principal and parroquia.parroquia_principal == pp._id %}selected{% endid %}>
+            {{pp.nombre}}
+          </option>
+          {% endfor %}
+      </select>
 
       <button type="submit">Actualizar</button>
     </form>

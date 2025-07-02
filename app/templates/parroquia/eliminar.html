@@ -95,10 +95,13 @@
   </style>
 </head>
 <body>
-  <h1>¿Eliminar esta parroquia?</h1>
-  <form method="post">
+  <h1>¿Seguro que deseas eliminar la parroquia "{{parroquia.nombre}}"?</h1>
+  <p style="color: #c0392b; font-weight: bold;">
+    ¡Atención! Si otras parroquias dependen de esta, la referencia se perderá
+  </p>
+  <form method="post" action="{{ url_for('parroquia.eliminar', id=parroquia._id) }}">
     <button type="submit">Sí, eliminar</button>
-    <a href="{{ url_for('parroquia_sec.index') }}">Cancelar</a>
+    <a href="{{ url_for('parroquia.index') }}">Cancelar</a>
   </form>
 </body>
 </html>

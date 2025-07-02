@@ -34,7 +34,7 @@ def insertar():
         return redirect(url_for('catequista.index'))
     return render_template('catequista/insertar.html')
 
-@catequista_bp.route('/actualizar/<int:id>', methods=['GET', 'POST'])
+@catequista_bp.route('/actualizar/<int:id>/', methods=['GET', 'POST'])
 def actualizar(id):
     if request.method == 'POST':
         actualizar_catequista(
@@ -60,7 +60,7 @@ def eliminar(id):
     flash("Catequista eliminado.", "info")
     return redirect(url_for('catequista.index'))
 
-@catequista_bp.route('/confirmar-eliminar/<int:id>')
+@catequista_bp.route('/confirmar-eliminar/<int:id>/')
 def confirmar_eliminar(id):
     catequista = obtener_catequista_por_id(id)
     if not catequista:

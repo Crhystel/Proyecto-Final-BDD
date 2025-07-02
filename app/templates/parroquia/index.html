@@ -146,7 +146,7 @@
   <h1>Parroquias</h1>
 
   <!-- Botones -->
-  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
   <a href="/parroquia/insertar" class="boton-insertar">+ Insertar nueva parroquia</a>
 
   <table>
@@ -155,16 +155,16 @@
     </tr>
     {% for p in parroquias %}
     <tr>
-      <td>{{ p.id_parroquia }}</td>
+      <td>{{ p._id }}</td>
       <td>{{ p.nombre }}</td>
       <td>{{ p.direccion }}</td>
       <td>{{ p.ciudad }}</td>
       <td>{{ p.telefono or '—' }}</td>
       <td>{{ p.correo_electronico or '—' }}</td>
-      <td>{{ p.id_parroquia_principal or '—' }}</td>
+      <td>{{ p.nombre_principal or 'Si (Principal)'}}</td>
       <td>
-        <a href="/parroquia/actualizar/{{ p.id_parroquia }}">Editar</a>
-        <a href="/parroquia/eliminar/{{ p.id_parroquia }}">Eliminar</a>
+        <a href="/parroquia/actualizar/{{ p._id }}">Editar</a>
+        <a href="/parroquia/eliminar/{{ p._id }}">Eliminar</a>
       </td>
     </tr>
     {% endfor %}
