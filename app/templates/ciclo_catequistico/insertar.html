@@ -89,7 +89,7 @@
     <select name="id_nivel" required>
       <option value="">Seleccione Nivel</option>
       {% for nivel in niveles %}
-      <option value="{{ nivel.id_nivel_catequesis }}">{{ nivel.nombre_nivel }}</option>
+      <option value="{{ nivel._id }}">{{ nivel.nombre_nivel }}</option>
       {% endfor %}
     </select><br>
 

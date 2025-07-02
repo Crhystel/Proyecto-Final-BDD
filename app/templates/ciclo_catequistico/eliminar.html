@@ -96,7 +96,7 @@
 </head>
 <body>
 <h1>¿Estás seguro que deseas eliminar este ciclo?</h1>
-<form method="post">
+<form method="post" action="{{ url_for('ciclo.eliminar', id=ciclo._id) }}">
     <button type="submit">Eliminar</button>
     <a href="{{ url_for('ciclo.index') }}">Cancelar</a>
 </form>

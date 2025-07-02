@@ -83,12 +83,12 @@
 
   <form method="post">
     <input name="nombre" value="{{ ciclo.nombre }}" required><br>
-    <input type="date" name="fecha_inicio" value="{{ ciclo.fecha_inicio }}" required><br>
-    <input type="date" name="fecha_fin" value="{{ ciclo.fecha_fin }}" required><br>
+    <input type="date" name="fecha_inicio" value="{{ ciclo.fecha_inicio.strftime('%Y-%m-%d') }}" required><br>
+    <input type="date" name="fecha_fin" value="{{ ciclo.fecha_fin.strftime('%Y-%m-%d') }}" required><br>
 
     <select name="id_nivel" required>
       {% for nivel in niveles %}
-      <option value="{{ nivel.id_nivel_catequesis }}" {% if nivel.id_nivel_catequesis == ciclo.id_nivel %}selected{% endif %}>{{ nivel.nombre_nivel }}</option>
+      <option value="{{ nivel._id }}" {% if ciclo.nivel_ref and nivel._id== ciclo.nivel_ref %}selected{% endif %}>{{ nivel.nombre_nivel }}</option>
       {% endfor %}
     </select><br>
 

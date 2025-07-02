@@ -152,11 +152,11 @@
     <tbody>
       {% for c in ciclos %}
       <tr>
-        <td>{{ c.id_ciclo }}</td>
+        <td>{{ c._id }}</td>
         <td>{{ c.nombre }}</td>
-        <td>{{ c.fecha_inicio }}</td>
-        <td>{{ c.fecha_fin }}</td>
-        <td>{{ c.id_nivel }}</td>
+        <td>{{ c.fecha_inicio.strftime('%d-%m-%Y') }}</td>
+        <td>{{ c.fecha_fin.strftime('%d-%m-%Y')}}</td>
+        <td>{{ c.nombre_nivel or 'N/A' }}</td>
         <td class="acciones">
           <a href="{{ url_for('ciclo.actualizar', id=c.id_ciclo) }}" class="editar">Editar</a>
           <a href="{{ url_for('ciclo.eliminar', id=c.id_ciclo) }}" class="eliminar">Eliminar</a>
