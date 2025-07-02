@@ -7,7 +7,7 @@ from app.services.ciclo_catequistico_service import (
     eliminar_ciclo
 )
 
-from app.services.nivel_service import obtener_niveles
+from app.services.nivelcatequesis_service import obtener_niveles
 
 ciclo_bp = Blueprint('ciclo', __name__, url_prefix='/ciclos')
 @ciclo_bp.before_request

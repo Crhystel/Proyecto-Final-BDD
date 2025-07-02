@@ -107,17 +107,19 @@
     <input name="nombre_nivel" placeholder="Nombre del Nivel" required>
     <textarea name="descripcion" placeholder="Descripción" required></textarea>
 
+    <label for="id_libro">Libro Asociado</label>
     <select name="id_libro">
       <option value="">Sin libro asociado</option>
       {% for libro in libros %}
-      <option value="{{ libro.id_libro }}">{{ libro.titulo }}</option>
+      <option value="{{ libro._id }}">{{ libro.titulo }}</option>
       {% endfor %}
     </select>
 
+    <label for="id_tipo_sacramento">Sacramento Asociado</label>
     <select name="id_tipo_sacramento">
       <option value="">Sin sacramento asociado</option>
       {% for tipo in tipos %}
-      <option value="{{ tipo.id_sacramento_tipo }}">{{ tipo.nombre }}</option>
+      <option value="{{ tipo._id }}">{{ tipo.nombre }}</option>
       {% endfor %}
     </select>
 

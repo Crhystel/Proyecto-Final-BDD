@@ -106,18 +106,20 @@
     <input name="orden" type="number" value="{{ nivel.orden }}" required>
     <input name="nombre_nivel" value="{{ nivel.nombre_nivel }}" required>
     <textarea name="descripcion" required>{{ nivel.descripcion }}</textarea>
-
-    <select name="id_libro">
+    <label for="id_libro">Libro Asociado</label>
+    <select id="id_libro" name="id_libro">
       <option value="">Sin libro asociado</option>
       {% for libro in libros %}
-      <option value="{{ libro.id_libro }}" {% if nivel.id_libro == libro.id_libro %}selected{% endif %}>{{ libro.titulo }}</option>
+      <option value="{{ libro._id }}"  {% if nivel.libro and nivel.libro.id_libro == libro._id %}selected{% endif %}>{{ libro.titulo }}</option>
       {% endfor %}
     </select>
 
-    <select name="id_tipo_sacramento">
+    <label for="id_tipo_sacramento">Sacramento Asociado</label>
+    <select id="id_tipo_sacramento" name="id_tipo_sacramento">
       <option value="">Sin sacramento asociado</option>
       {% for tipo in tipos %}
-      <option value="{{ tipo.id_sacramento_tipo }}" {% if nivel.id_tipo_sacramento == tipo.id_sacramento_tipo %}selected{% endif %}>{{ tipo.nombre }}</option>
+      <option value="{{ tipo._id }}"
+        {% if nivel.tipo_sacramento and nivel.tipo_sacramento.id_sacramento_tipo == tipo._id %}selected{% endif %}>{{ tipo.nombre }}</option>
       {% endfor %}
     </select>
 

@@ -153,15 +153,15 @@
     <tbody>
       {% for n in niveles %}
       <tr>
-        <td>{{ n.id_nivel_catequesis }}</td>
+        <td>{{ n._id }}</td>
         <td>{{ n.orden }}</td>
         <td>{{ n.nombre_nivel }}</td>
         <td>{{ n.descripcion }}</td>
-        <td>{{ n.id_libro or '—' }}</td>
-        <td>{{ n.id_tipo_sacramento or '—' }}</td>
+        <td>{{ n.nombre_libro or '—' }}</td>
+        <td>{{ n.nombre_sacramento or '—' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('nivel.actualizar', id=n.id_nivel_catequesis) }}" class="editar">Editar</a>
-          <a href="{{ url_for('nivel.eliminar', id=n.id_nivel_catequesis) }}" class="eliminar">Eliminar</a>
+          <a href="{{ url_for('nivel.actualizar', id=n._id) }}" class="editar">Editar</a>
+          <a href="{{ url_for('nivel.confirmar_eliminar', id=n._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
       {% endfor %}
