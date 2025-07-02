@@ -8,7 +8,7 @@ from app.services.catequizando_service import (
 )
 from app.services.parroquia_service import obtener_parroquias
 
-catequizando_bp=Blueprint("catequizando",__name__)
+catequizando_bp=Blueprint("catequizando",__name__, url_prefix='/catequizandos')
 
 @catequizando_bp.before_request
 def solo_admin():

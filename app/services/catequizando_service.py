@@ -1,16 +1,29 @@
 from app.database import get_db_connection
 from bson import ObjectId
 import datetime
+from pymongo import ReturnDocument
 
 def _get_next_id(collection_name):
     db=get_db_connection()
     sequence_document=db.counters.find_one_and_update(
         {'_id':f"{collection_name}_id"},
         {'$inc':{'sequence_value':1}},
-        return_document=True,
+        return_document=ReturnDocument.AFTER,
         upsert=True
     )
     return sequence_document['sequence_value']
+def sincronizar_contador(collection_name):
+    db=get_db_connection()
+    documento_max_id=list(db[collection_name].find().sort("_id",-1).limit(1))
+    max_id=0
+    if documento_max_id:
+        max_id=documento_max_id[0]["_id"]
+    db.counters.update_one(
+        {'_id':f"{collection_name}_id"},
+        {'$max':{'sequence_value':max_id}},
+        upsert=True
+    )
+    
 
 # Funciones CRUD principales
 

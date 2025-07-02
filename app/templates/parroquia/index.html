@@ -147,11 +147,11 @@
 
   <!-- Botones -->
   <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
-  <a href="/parroquia/insertar" class="boton-insertar">+ Insertar nueva parroquia</a>
+  <a href="{{ url_for('parroquia.insertar')}}" class="boton-insertar">+ Insertar nueva parroquia</a>
 
   <table>
     <tr>
-      <th>ID</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>Teléfono</th><th>Correo</th><th>Principal</th><th>Acciones</th>
+      <th>ID</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>Teléfono</th><th>Correo</th><th>Parroquia Principal</th><th>Acciones</th>
     </tr>
     {% for p in parroquias %}
     <tr>
@@ -161,10 +161,10 @@
       <td>{{ p.ciudad }}</td>
       <td>{{ p.telefono or '—' }}</td>
       <td>{{ p.correo_electronico or '—' }}</td>
-      <td>{{ p.nombre_principal or 'Si (Principal)'}}</td>
+      <td>{{ p.nombre_principal}}</td>
       <td>
-        <a href="/parroquia/actualizar/{{ p._id }}">Editar</a>
-        <a href="/parroquia/eliminar/{{ p._id }}">Eliminar</a>
+        <a href="{{ url_for('parroquia.actualizar', id=p._id) }}">Editar</a>
+        <a href="{{ url_for('parroquia.confirmar_eliminar', id=p._id) }}">Eliminar</a>
       </td>
     </tr>
     {% endfor %}

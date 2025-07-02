@@ -102,16 +102,47 @@
     <input name="direccion" placeholder="Dirección" required />
     <input name="ciudad" placeholder="Ciudad" required />
     <input name="telefono" placeholder="Teléfono" />
-    <input name="correo" placeholder="Correo electrónico" />
-    <label for="id_parroquia_principal">Parroquia Principal (dejar en blanco si esta es una)</label>
-    <select id="id_parroquia_principal" name="id_parroquia_principal" required>
+    <input name="correo_electronico" placeholder="Correo electrónico" />
+    <label for="id_parroquia_principal" style="font-weight: bold; display: block; margin-top: 10px; margin-bottom: 5px;">
+      ¿A qué Parroquia Principal pertenece?
+    </label>
+    <select id="id_parroquia_principal" name="id_parroquia_principal">
       <option value="">Esta es una parroquia Principal</option>
       {% for pp in parroquias_principales %}
         <option value="{{ pp._id}}">{{ pp.nombre }}</option>
       {% endfor %}
     </select>
+    <div id="campos_grupo" style="display: none; border-left: 3px solid #8e44ad;padding-left: 15px; margin-top: 20px;">
+      <h4 style="color: #6a1b9a;">Grupo de Catequesis</h4>
+      <label for="nombre_grupo">Nombre del Grupo</label>
+      <input id="nombre_grupo" name="nombre_grupo" placeholder="Ej: Grupo A - Sábados Mañana">
+      <label for="id_ciclo">Ciclo Catequístico</label>
+      <select id="id_ciclo" name="id_ciclo">
+        <option value="">Seleccione un ciclo</option>
+        {% for ciclo in ciclos %}
+          <option value="{{ciclo._id}}">{{ciclo.nombre}}</option>
+        {% endfor %}
+      </select>
+    </div>
 
     <button type="submit">Guardar</button>
   </form>
+  <script>
+    function toggleGrupoFields(){
+      const parroquiaSelect=document.getElementById('id_parroquia_principal');
+      const camposGrupo=document.getElementById("campos_grupo");
+      const nombreGrupoInput=document.getElementById("nombre_grupo");
+      const cicloSelect=document.getElementById("id_ciclo");
+      if(parroquiaSelect.value !== ""){
+        camposGrupo.style.display='block';
+        nombreGrupoInput.required=true;
+        cicloSelect.required=true;
+      }else{
+        camposGrupo.style.display="none";
+        nombreGrupoInput.required="false";
+        cicloSelect.required=false;
+      }
+    }
+  </script>
 </body>
 </html>

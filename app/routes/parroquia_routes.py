@@ -1,13 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.services.parroquia_service import (
-    crear_parroquia,
+    crear_parroquia_grupo,
     obtener_parroquias,
     obtener_parroquia_por_id,
     obtener_parroquias_principales,
     actualizar_parroquia,
     eliminar_parroquia
 )
-parroquia_bp = Blueprint('parroquia', __name__, url_prefix='/parroquia')
+from app.services.ciclo_catequistico_service import obtener_ciclos
+parroquia_bp = Blueprint('parroquia', __name__, url_prefix='/parroquias')
 
 @parroquia_bp.before_request
 def solo_admin():
@@ -23,23 +24,24 @@ def index():
 @parroquia_bp.route('/insertar', methods=['GET', 'POST'])
 def insertar():
     if request.method == 'POST':
-        crear_parroquia(
+        crear_parroquia_grupo(
             nombre=request.form['nombre'],
             direccion=request.form['direccion'],
             ciudad=request.form['ciudad'],
             telefono=request.form.get('telefono'),
-            correo=request.form.get('correo'),
-            # Si 'id_parroquia_principal' no se envía, será None por defecto
-            id_parroquia_principal=request.form.get('id_parroquia_principal') or None
+            correo=request.form.get('correo'), 
+            id_principal_seleccionado=request.form.get('id_parroquia_principal') or None,
+            nombre_grupo=request.form.get("nombre_grupo"),
+            id_ciclo=request.form.get("id_ciclo")
         )
         flash("Parroquia creada exitosamente.", "success")
         return redirect(url_for('parroquia.index'))
     
-    # Para el formulario, necesitamos la lista de parroquias principales
     parroquias_principales = obtener_parroquias_principales()
-    return render_template('parroquia/insertar.html', parroquias_principales=parroquias_principales)
+    lista_de_ciclos=obtener_ciclos()
+    return render_template('parroquia/insertar.html', parroquias_principales=parroquias_principales, ciclos=lista_de_ciclos)
 
-@parroquia_bp.route('/actualizar/<int:id>', methods=['GET', 'POST'])
+@parroquia_bp.route('/actualizar/<string:id>', methods=['GET', 'POST'])
 def actualizar(id):
     if request.method == 'POST':
         actualizar_parroquia(
@@ -62,13 +64,13 @@ def actualizar(id):
     parroquias_principales = obtener_parroquias_principales()
     return render_template('parroquia/actualizar.html', parroquia=parroquia, parroquias_principales=parroquias_principales)
 
-@parroquia_bp.route('/eliminar/<int:id>', methods=['POST'])
+@parroquia_bp.route('/eliminar/<string:id>', methods=['POST'])
 def eliminar(id):
     eliminar_parroquia(id)
     flash("Parroquia eliminada.", "info")
     return redirect(url_for('parroquia.index'))
 
-@parroquia_bp.route('/confirmar-eliminar/<int:id>')
+@parroquia_bp.route('/confirmar-eliminar/<string:id>')
 def confirmar_eliminar(id):
     parroquia = obtener_parroquia_por_id(id)
     if not parroquia:

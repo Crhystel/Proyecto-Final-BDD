@@ -7,6 +7,7 @@ from app.routes.auth_routes import auth_bp
 from app.routes.catequizando_routes import catequizando_bp
 from app.routes.usuario_routes import usuario_bp
 from app.routes.parroquia_routes import parroquia_bp
+from app.services.catequizando_service import sincronizar_contador
 
 app = Flask(__name__, 
             static_folder="static", 
@@ -18,8 +19,8 @@ bcrypt.init_app(app)
 
 
 app.register_blueprint(auth_bp)
-app.register_blueprint(catequizando_bp, url_prefiz='/catequizando')
-app.register_blueprint(usuario_bp,url_prefix='/usuarios')
+app.register_blueprint(catequizando_bp)
+app.register_blueprint(usuario_bp)
 app.register_blueprint(parroquia_bp)
 
 
@@ -49,6 +50,10 @@ def bienvenida_general():
         return redirect(url_for('auth.login'))
         
     return render_template('bienvenidageneral.html')
+
+with app.app_context():
+    sincronizar_contador('parroquias')
+    sincronizar_contador('catequizandos')
 
 if __name__ == '__main__':
     app.run(debug=True)

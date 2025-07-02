@@ -118,7 +118,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       const from = document.referrer;
       const isInternal = from.includes(window.location.origin) && (
-        from.includes("/parroquia/") ||
+        from.includes("/parroquias/") ||
         from.includes("/usuarios/") ||
         from.includes("/catequistas/") ||
         from.includes("/catequizandos/") ||
@@ -158,7 +158,7 @@
       }
   
       // Redirige a la página correspondiente
-      const routes = [ "/parroquia/", "/usuarios/", "/catequistas/", "/catequizandos/",
+      const routes = [ "/parroquias/", "/usuarios/", "/catequistas/", "/catequizandos/",
         "/fichas/", "/libros/", "/tipos_sacramento/", "/niveles/", "/ciclos/",
         "/grupos/", "/grupos_catequistas/", "/inscripciones/", "/personas/" , "/certificados/"
       ];

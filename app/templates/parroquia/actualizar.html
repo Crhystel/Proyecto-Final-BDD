@@ -76,6 +76,25 @@
       background-color: #6a1b9a;
       box-shadow: 0 5px 15px rgba(106, 27, 154, 0.8);
     }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #8e44ad;
+      box-shadow: 0 0 6px #8e44ad;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s;
+    }
+    input, select {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
   </style>
 </head>
 <body>
@@ -97,12 +116,12 @@
       <label for="correo">Correo Electrónico</label>
       <input id="correo" name="correo" value="{{ parroquia.correo_electronico }}">
 
-      <label for="id_parroquia_principal">ID Parroquia Principal</label>
+      <label for="id_parroquia_principal">Parroquia Principal</label>
       <select id="id_parroquia_principal" name="id_parroquia_principal">
-        <option value="">Ninguna (Es una Parroquia Principal)</option>
+        <option value="">Es una Parroquia Principal</option>
         {% for pp in parroquias_principales %}
           <option value="{{pp._id}}"
-            {% if parroquia.parroquia_principal and parroquia.parroquia_principal == pp._id %}selected{% endid %}>
+            {% if parroquia.parroquia_principal and parroquia.parroquia_principal == pp._id %}selected{% endif %}>
             {{pp.nombre}}
           </option>
           {% endfor %}
