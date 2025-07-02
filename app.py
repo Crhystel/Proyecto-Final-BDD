@@ -54,6 +54,8 @@ def bienvenida_general():
 with app.app_context():
     sincronizar_contador('parroquias')
     sincronizar_contador('catequizandos')
+    sincronizar_contador("libros")
+    sincronizar_contador("tipo_sacramentos")
 
 if __name__ == '__main__':
     app.run(debug=True)
