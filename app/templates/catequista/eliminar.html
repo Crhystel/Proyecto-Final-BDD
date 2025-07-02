@@ -96,7 +96,7 @@
 </head>
 <body>
   <h1>¿Eliminar este catequista?</h1>
-  <form method="post">
+  <form method="post" action="{{ url_for('catequista.eliminar', id=catequista._id) }}">
     <button type="submit">Sí, eliminar</button>
     <a href="{{ url_for('catequista.index') }}">Cancelar</a>
   </form>

@@ -153,15 +153,15 @@
     <tbody>
       {% for c in catequistas %}
       <tr>
-        <td>{{ c.id_catequista }}</td>
+        <td>{{ c._id }}</td>
         <td>{{ c.nombre }}</td>
         <td>{{ c.apellido }}</td>
         <td>{{ c.correo_electrico }}</td>
         <td>{{ c.telefono }}</td>
         <td>{{ 'Principal' if c.rol == 'P' else 'Ayudante' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('catequista.actualizar', id=c.id_catequista) }}">Editar</a>
-          <a href="{{ url_for('catequista.eliminar', id=c.id_catequista) }}">Eliminar</a>
+          <a href="{{ url_for('catequista.actualizar', id=c._id) }}">Editar</a>
+          <a href="{{ url_for('catequista.eliminar', id=c._id) }}">Eliminar</a>
         </td>
       </tr>
       {% endfor %}
