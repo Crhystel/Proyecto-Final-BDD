@@ -60,32 +60,7 @@ def crear_catequizando(apellido,nombre,fecha_nacimiento, doc_identidad, fecha_re
 #Obtener catequizando
 def obtener_catequizandos():
     db=get_db_connection()
-    pipeline=[
-        {
-            "$lookup":{
-                "from":"parroquias",
-                "localField":"parroquia_ref",
-                "foreignField":"_id",
-                "as":"parroquia_info"
-            }
-        },
-        {
-            "$unwind":{
-                "path":"$parroquia_info",
-                "preserveNullAndEmptyArrays":True
-            }
-        },
-        {
-            "$project":{
-                "_id":1,
-                "nombre":1,
-                "apellido":1,
-                "documento_identidad":1,
-                "nombre_parroquia":"$parroquia_info.nombre"
-            }
-        }
-    ]
-    return list(db.catequizandos.aggregate(pipeline))
+    return list(db.catequizandos.find({}))
 
 #Obtener catequizando por id
 def obtener_catequizando_por_id(id_catequizando):

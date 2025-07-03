@@ -135,7 +135,7 @@
 </head>
 <body>
   <h1>Lista de Catequistas</h1>
-  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
   <a href="{{ url_for('catequista.insertar') }}" class="boton-insertar">+ Insertar nuevo catequista</a>
 
   <table>
@@ -161,7 +161,7 @@
         <td>{{ 'Principal' if c.rol == 'P' else 'Ayudante' }}</td>
         <td class="acciones">
           <a href="{{ url_for('catequista.actualizar', id=c._id) }}">Editar</a>
-          <a href="{{ url_for('catequista.eliminar', id=c._id) }}">Eliminar</a>
+          <a href="{{ url_for('catequista.confirmar_eliminar', id=c._id) }}">Eliminar</a>
         </td>
       </tr>
       {% endfor %}
