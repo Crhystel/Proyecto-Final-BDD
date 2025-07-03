@@ -1,5 +1,3 @@
-# app/services/tipo_documento_service.py
-
 from app.database import get_db_connection
 from .catequizando_service import _get_next_id
 
@@ -15,7 +13,7 @@ def crear_tipo_documento(tipo, descripcion):
 
 def obtener_tipos_documento():
     db = get_db_connection()
-    return list(db.tipo_documentos.find().sort("descripcion", 1))
+    return list(db.tipo_documentos.find().sort("_id", 1))
 
 def obtener_tipo_documento_por_id(id_tipo):
     db = get_db_connection()
