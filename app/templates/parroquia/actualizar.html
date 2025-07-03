@@ -114,14 +114,15 @@
       <input id="telefono" name="telefono" value="{{ parroquia.telefono }}">
 
       <label for="correo">Correo Electrónico</label>
-      <input id="correo" name="correo" value="{{ parroquia.correo_electronico }}">
+      <input id="correo" name="correo_electronico" value="{{ parroquia.correo_electronico }}">
 
       <label for="id_parroquia_principal">Parroquia Principal</label>
       <select id="id_parroquia_principal" name="id_parroquia_principal">
         <option value="">Es una Parroquia Principal</option>
         {% for pp in parroquias_principales %}
           <option value="{{pp._id}}"
-            {% if parroquia.parroquia_principal and parroquia.parroquia_principal == pp._id %}selected{% endif %}>
+            {% if parroquia.get('parroquia_principal') and parroquia.parroquia_principal.id_parroquia_principal == pp._id %}
+            selected{% endif %}>
             {{pp.nombre}}
           </option>
           {% endfor %}

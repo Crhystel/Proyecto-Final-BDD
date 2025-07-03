@@ -173,7 +173,9 @@
       <td>{{ p.nombre_principal}}</td>
       <td class="acciones">
         <a href="{{ url_for('parroquia.actualizar', id=p._id) }}">Editar</a>
-        <a href="{{ url_for('parroquia.detalles_parroquia', id=p._id) }}">Ver Grupos</a>
+        {% if p.nombre_principal != '— (Principal)' %}
+          <a href="{{ url_for('parroquia.detalles_parroquia', id=p._id) }}">Ver Grupos</a>
+        {% endif %}
         <a href="{{ url_for('parroquia.confirmar_eliminar', id=p._id) }}">Eliminar</a>
       </td>
     </tr>

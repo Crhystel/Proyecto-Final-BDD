@@ -81,7 +81,10 @@ def actualizar_parroquia(id_parroquia, nombre, direccion, ciudad, telefono, corr
         id_num = int(id_parroquia)
     except (ValueError, TypeError):
         return False
-        
+    if id_parroquia_principal and int(id_parroquia_principal) == id_num:
+        print("Error: Una parroquia no puede ser su propia parroquia principal.")
+        return -1 
+    
     update_data = {
          "$set": {
             "nombre": nombre,
@@ -91,7 +94,7 @@ def actualizar_parroquia(id_parroquia, nombre, direccion, ciudad, telefono, corr
             "correo_electronico": correo
         }
     }
-    if id_parroquia_principal:
+    if id_parroquia_principal :
         parroquia_principal_doc = db.parroquias.find_one({"_id": int(id_parroquia_principal)})
         if parroquia_principal_doc:
             sub_documento = {
@@ -103,6 +106,7 @@ def actualizar_parroquia(id_parroquia, nombre, direccion, ciudad, telefono, corr
             update_data["$set"]["parroquia_principal"] = sub_documento
     else:
         update_data["$unset"] = {"parroquia_principal": ""}
+        update_data["$set"]["grupos_catequesis"]=[]
     resultado = db.parroquias.update_one({"_id": id_num}, update_data)
     return resultado.modified_count > 0
 
