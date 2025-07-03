@@ -63,35 +63,3 @@ def eliminar_usuario(id_usuario):
         return 0
 
 
-def agregar_notificacion_a_usuario(id_usuario, tipo, mensaje):
-    db = get_db_connection()
-    
-    nueva_notificacion = {
-        "id_notificacion": _get_next_id('notificaciones'), 
-        "tipo_notificacion": tipo,
-        "mensaje": mensaje,
-        "fecha_recepcion": datetime.datetime.now(datetime.timezone.utc),
-        "leido": False
-    }
-    
-    resultado = db.usuarios.update_one(
-        {"_id": int(id_usuario)},
-        {"$push": {"notificaciones": nueva_notificacion}}
-    )
-    return resultado.modified_count > 0
-
-def marcar_notificacion_como_leida(id_usuario, id_notificacion):
-    db = get_db_connection()
-    resultado = db.usuarios.update_one(
-        {"_id": int(id_usuario), "notificaciones.id_notificacion": int(id_notificacion)},
-        {"$set": {"notificaciones.$.leido": True}}
-    )
-    return resultado.modified_count > 0
-
-def eliminar_notificacion_de_usuario(id_usuario, id_notificacion):
-    db = get_db_connection()
-    resultado = db.usuarios.update_one(
-        {"_id": int(id_usuario)},
-        {"$pull": {"notificaciones": {"id_notificacion": int(id_notificacion)}}}
-    )
-    return resultado.modified_count > 0

@@ -134,34 +134,34 @@
   </style>
 </head>
 <body>
-  <h1>Lista de Ciclos Catequísticos</h1>
-  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('ciclo.insertar') }}" class="boton-insertar">+ Nuevo ciclo</a>
+  <h1>Ciclos Catequísticos</h1>
+  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('ciclo.insertar') }}" class="boton-insertar">+ Crear Nuevo Ciclo</a>
 
   <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Inicio</th>
-        <th>Fin</th>
-        <th>Nivel</th>
+        <th>Nombre del Ciclo</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha de Fin</th>
+        <th>Nivel Asociado</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       {% for c in ciclos %}
       <tr>
-        <td>{{ c._id }}</td>
-        <td>{{ c.nombre }}</td>
-        <td>{{ c.fecha_inicio.strftime('%d-%m-%Y') }}</td>
-        <td>{{ c.fecha_fin.strftime('%d-%m-%Y')}}</td>
+        <td><strong>{{ c.nombre }}</strong></td>
+        <td>{{ c.fecha_inicio.strftime('%d / %b / %Y') if c.fecha_inicio }}</td>
+        <td>{{ c.fecha_fin.strftime('%d / %b / %Y') if c.fecha_fin }}</td>
         <td>{{ c.nombre_nivel or 'N/A' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('ciclo.actualizar', id=c.id_ciclo) }}" class="editar">Editar</a>
-          <a href="{{ url_for('ciclo.eliminar', id=c.id_ciclo) }}" class="eliminar">Eliminar</a>
+          <a href="{{ url_for('ciclo.actualizar', id=c._id) }}" class="editar">Editar</a>
+          <a href="{{ url_for('ciclo.confirmar_eliminar', id=c._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
+      {% else %}
+        <tr><td colspan="5" style="text-align:center;">No hay ciclos registrados.</td></tr>
       {% endfor %}
     </tbody>
   </table>

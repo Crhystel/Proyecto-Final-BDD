@@ -78,27 +78,32 @@
   </style>
 </head>
 <body>
-
   <h1>Registrar Ciclo Catequístico</h1>
-
   <form method="post">
-    <input name="nombre" placeholder="Nombre" required><br>
-    <input type="date" name="fecha_inicio" required><br>
-    <input type="date" name="fecha_fin" required><br>
-
-    <select name="id_nivel" required>
-      <option value="">Seleccione Nivel</option>
-      {% for nivel in niveles %}
-      <option value="{{ nivel._id }}">{{ nivel.nombre_nivel }}</option>
-      {% endfor %}
-    </select><br>
-
-    <button type="submit">Guardar</button>
+    <div>
+      <label for="nombre">Nombre del Ciclo</label>
+      <input id="nombre" name="nombre" placeholder="Ej: Ciclo 2024-2025 Comunión" required>
+    </div>
+    <div>
+      <label for="fecha_inicio">Fecha de Inicio</label>
+      <input id="fecha_inicio" type="date" name="fecha_inicio" required>
+    </div>
+    <div>
+      <label for="fecha_fin">Fecha de Fin</label>
+      <input id="fecha_fin" type="date" name="fecha_fin" required>
+    </div>
+    <div>
+      <label for="id_nivel">Nivel Asociado</label>
+      <select id="id_nivel" name="id_nivel" required>
+        <option value="">-- Seleccione un Nivel --</option>
+        {% for nivel in niveles %}
+        <option value="{{ nivel._id }}">{{ nivel.nombre_nivel }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit">Guardar Ciclo</button>
   </form>
-
-  <br>
-  <a href="{{ url_for('ciclo.index') }}" class="boton-regresar">Regresar</a>
-
+  <a href="{{ url_for('ciclo.index') }}" class="cancelar">Cancelar</a>
 </body>
 </html>
 

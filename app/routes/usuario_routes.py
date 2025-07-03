@@ -70,36 +70,3 @@ def confirmar_eliminar(id):
         return redirect(url_for('usuario.index'))
     return render_template('usuario/eliminar.html', usuario=usuario)
 
-@usuario_bp.route('/<int:id>/notificaciones')
-def ver_notificaciones(id):
-    usuario = obtener_usuario_por_id_service(id)
-    if not usuario:
-        flash("Usuario no encontrado.", "danger")
-        return redirect(url_for('usuario.index'))
-    
-    notificaciones = sorted(
-        usuario.get('notificaciones', []), 
-        key=lambda n: n['fecha_recepcion'], 
-        reverse=True
-    )
-    
-    return render_template('usuario/notificaciones.html', usuario=usuario, notificaciones=notificaciones)
-
-@usuario_bp.route('/<int:id>/agregar_notificacion', methods=['POST'])
-def agregar_notificacion(id):
-    tipo = request.form.get('tipo_notificacion')
-    mensaje = request.form.get('mensaje')
-
-    if not tipo or not mensaje:
-        flash("El tipo y el mensaje de la notificación son obligatorios.", "warning")
-        return redirect(url_for('usuario.ver_notificaciones', id=id))
-
-    agregar_notificacion_a_usuario(id, tipo, mensaje)
-    flash("Notificación enviada exitosamente.", "success")
-    return redirect(url_for('usuario.ver_notificaciones', id=id))
-
-@usuario_bp.route('/<int:id_usuario>/eliminar_notificacion/<int:id_notificacion>', methods=['POST'])
-def eliminar_notificacion(id_usuario, id_notificacion):
-    eliminar_notificacion_de_usuario(id_usuario, id_notificacion)
-    flash("Notificación eliminada.", "info")
-    return redirect(url_for('usuario.ver_notificaciones', id=id_usuario))

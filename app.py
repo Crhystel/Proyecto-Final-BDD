@@ -12,6 +12,7 @@ from app.routes.tipo_documento_routes import tipo_documento_bp
 from app.routes.persona_routes import persona_bp
 from app.routes.nivelcatequesis_routes import nivel_bp
 from app.routes.libro_route import libro_bp
+from app.routes.ciclo_catequistico_routes import ciclo_bp
 from app.routes.tipo_sacramento_routes import tiposacramento_bp
 from app.services.catequizando_service import sincronizar_contador
 
@@ -34,6 +35,7 @@ app.register_blueprint(persona_bp)
 app.register_blueprint(nivel_bp)
 app.register_blueprint(libro_bp)
 app.register_blueprint(tiposacramento_bp)
+app.register_blueprint(ciclo_bp)
 
 @app.route('/')
 def index_route():

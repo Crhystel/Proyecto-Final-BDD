@@ -164,7 +164,6 @@
         <td>{{ 'Admin' if u.rol == 'A' else 'Usuario' }}</td>
         <td class="acciones">
           <a href="{{ url_for('usuario.actualizar', id=u._id) }}" class="editar">Editar</a>
-          <a href="{{ url_for('usuario.ver_notificaciones', id=u._id) }}" class="notificaciones">Notificaciones</a>
           <a href="{{ url_for('usuario.confirmar_eliminar', id=u._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>

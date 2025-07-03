@@ -1,20 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.services.ciclo_catequistico_service import (
-    crear_ciclo,
-    obtener_ciclos,
-    obtener_ciclo_por_id,
-    actualizar_ciclo,
-    eliminar_ciclo
-)
-
+from app.services.ciclo_catequistico_service import *
 from app.services.nivelcatequesis_service import obtener_niveles
 
 ciclo_bp = Blueprint('ciclo', __name__, url_prefix='/ciclos')
+
 @ciclo_bp.before_request
 def verificar_admin():
     if 'rol' not in session or session['rol'] != 'A':
         flash("Acceso no autorizado", "warning")
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('home'))
 
 @ciclo_bp.route('/')
 def index():
@@ -36,7 +30,7 @@ def insertar():
     lista_niveles = obtener_niveles() 
     return render_template('ciclo_catequistico/insertar.html', niveles=lista_niveles)
 
-@ciclo_bp.route('/actualizar/<string:id>', methods=['GET', 'POST'])
+@ciclo_bp.route('/actualizar/<int:id>', methods=['GET', 'POST'])
 def actualizar(id):
     if request.method == 'POST':
         actualizar_ciclo(
@@ -57,7 +51,7 @@ def actualizar(id):
     lista_niveles = obtener_niveles()
     return render_template('ciclo_catequistico/actualizar.html', ciclo=ciclo, niveles=lista_niveles)
 
-@ciclo_bp.route('/confirmar-eliminar/<string:id>')
+@ciclo_bp.route('/confirmar-eliminar/<int:id>')
 def confirmar_eliminar(id):
     ciclo = obtener_ciclo_por_id(id)
     if not ciclo:
@@ -65,8 +59,11 @@ def confirmar_eliminar(id):
         return redirect(url_for('ciclo.index'))
     return render_template('ciclo_catequistico/eliminar.html', ciclo=ciclo)
 
-@ciclo_bp.route('/eliminar/<string:id>', methods=['POST'])
+@ciclo_bp.route('/eliminar/<int:id>', methods=['POST'])
 def eliminar(id):
-    eliminar_ciclo(id)
-    flash("Ciclo eliminado.", "info")
+    exito = eliminar_ciclo(id)
+    if exito:
+        flash("Ciclo eliminado.", "info")
+    else:
+        flash("Error al eliminar el ciclo.", "danger")
     return redirect(url_for('ciclo.index'))

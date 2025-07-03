@@ -95,10 +95,15 @@
   </style>
 </head>
 <body>
-<h1>¿Estás seguro que deseas eliminar este ciclo?</h1>
-<form method="post" action="{{ url_for('ciclo.eliminar', id=ciclo._id) }}">
-    <button type="submit">Eliminar</button>
-    <a href="{{ url_for('ciclo.index') }}">Cancelar</a>
-</form>
+  <div class="container">
+    <h1>¿Confirmas la eliminación?</h1>
+    <p>Estás a punto de eliminar el ciclo <strong>"{{ ciclo.nombre }}"</strong>. Esta acción no se puede deshacer.</p>
+    <form method="post" action="{{ url_for('ciclo.eliminar', id=ciclo._id) }}">
+        <div class="actions">
+            <button type="submit" class="btn-delete">Sí, Eliminar</button>
+            <a href="{{ url_for('ciclo.index') }}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+  </div>
 </body>
 </html>
