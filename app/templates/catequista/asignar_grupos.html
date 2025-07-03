@@ -134,39 +134,47 @@
   </style>
 </head>
 <body>
-  <h1>Lista de Catequistas</h1>
-  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('catequista.insertar') }}" class="boton-insertar">+ Insertar nuevo catequista</a>
+  <h1>Asignar Grupos a: {{ catequista.nombre }} {{ catequista.apellido }}</h1>
+    <p>Rol del catequista: <strong>{{ 'Principal' if catequista.rol == 'P' else 'Ayudante' }}</strong></p>
+    <a href="{{ url_for('catequista.index') }}">Volver</a>
+    <hr>
+    
+     <h2>Grupos Asignados</h2>
+    <ul>
+        {% for grupo in catequista.get('grupos_como_principal') or [] %}
+            <li>
+                {{ grupo.nombre_grupo }} ({{ grupo.rol_en_grupo }}) 
+                <form method="post" action="{{ url_for('catequista.eliminar_grupo', id_catequista=catequista._id, id_grupo=grupo._id) }}" style="display:inline;">
+                    <button type="submit">Quitar</button>
+                </form>
+            </li>
+        {% endfor %}
+        {% for grupo in catequista.get('grupos_como_secundario') or [] %}
+            <li>
+                {{ grupo.nombre_grupo }}  ({{ grupo.rol_en_grupo }})
+                 <form method="post" action="{{ url_for('catequista.eliminar_grupo', id_catequista=catequista._id, id_grupo=grupo._id) }}" style="display:inline;">
+                    <button type="submit">Quitar</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Correo</th>
-        <th>Teléfono</th>
-        <th>Rol</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for c in catequistas %}
-      <tr>
-        <td>{{ c._id }}</td>
-        <td>{{ c.nombre }}</td>
-        <td>{{ c.apellido }}</td>
-        <td>{{ c.correo_electrico }}</td>
-        <td>{{ c.telefono }}</td>
-        <td>{{ 'Principal' if c.rol == 'P' else 'Ayudante' }}</td>
-        <td class="acciones">
-          <a href="{{ url_for('catequista.actualizar', id=c._id) }}">Editar</a>
-          <a href="{{ url_for('catequista.asignar_grupos', id=c._id) }}">Asignar Grupos</a>
-          <a href="{{ url_for('catequista.confirmar_eliminar', id=c._id) }}">Eliminar</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <hr>
+
+    <h2>Asignar a un Nuevo Grupo</h2>
+    <form method="post" action="{{ url_for('catequista.procesar_asignacion', id=catequista._id) }}">
+        <select name="id_grupo" required>
+            <option value="">Seleccione un grupo</option>
+            {% for grupo in todos_los_grupos %}
+                {% if grupo._id not in grupos_asignados_ids %}
+                    <option value="{{ grupo._id }}">{{ grupo.nombre_grupo }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button type="submit">Asignar</button>
+    </form>
+    
+    <br>
+    
 </body>
 </html>

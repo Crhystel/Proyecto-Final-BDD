@@ -1,5 +1,4 @@
 from app.database import get_db_connection
-from bson import ObjectId
 
 from .catequizando_service import _get_next_id
 
@@ -12,7 +11,7 @@ def crear_catequista(nombre, apellido, correo, telefono, rol):
         "apellido": apellido,
         "telefono": int(telefono),  
         "correo_electrico": correo,
-        "rol": rol,  # 'P' para Principal, 'A' para Ayudante
+        "rol": rol.strip().upper(),  # 'P' para Principal, 'A' para Ayudante
         "grupos_como_principal": [],
         "grupos_como_secundario": []
     }
@@ -36,7 +35,7 @@ def actualizar_catequista(id_catequista, nombre, apellido, correo, telefono, rol
             "apellido": apellido,
             "telefono": int(telefono),
             "correo_electrico": correo,
-            "rol": rol
+            "rol": rol.strip().upper(),
         }
     }
     
@@ -51,19 +50,50 @@ def eliminar_catequista(id_catequista):
     resultado = db.catequistas.delete_one({"_id": int(id_catequista)})
     return resultado.deleted_count > 0
 
-def asignar_grupo_a_catequista(id_catequista, id_grupo, nombre_grupo, rol_en_grupo):
+def asignar_grupo_a_catequista(id_catequista, id_grupo, nombre_grupo, rol_catequista):
     db = get_db_connection()
-    
+    rol_normalizado = rol_catequista.strip().upper()
+    rol_en_grupo = "Principal" if rol_normalizado == "P" else "Ayudante"
     grupo_data = {
-        "id_grupo": id_grupo,
+        "_id": int(id_grupo),
         "nombre_grupo": nombre_grupo,
-        "rol_en_grupo": rol_en_grupo # ej. "Coordinador", "Asistente"
+        "rol_en_grupo": rol_en_grupo
     }
 
-    array_a_actualizar = "grupos_como_principal" if rol_en_grupo == "Principal" else "grupos_como_secundario"
+    array_a_actualizar = "grupos_como_principal" if rol_normalizado == "P" else "grupos_como_secundario"
 
     resultado = db.catequistas.update_one(
         {"_id": int(id_catequista)},
         {"$push": {array_a_actualizar: grupo_data}}
     )
     return resultado.modified_count > 0
+
+def eliminar_grupo_de_catequista(id_catequista, id_grupo):
+    db = get_db_connection()
+    resultado = db.catequistas.update_one(
+        {"_id": int(id_catequista)},
+        {
+            "$pull": {
+                "grupos_como_principal": {"_id": int(id_grupo)},
+                "grupos_como_secundario": {"_id": int(id_grupo)}
+            }
+        }
+    )
+    return resultado.modified_count > 0
+def obtener_todos_los_grupos():
+    db = get_db_connection()
+    pipeline = [
+        {"$unwind": "$grupos_catequesis"}, 
+        {"$replaceRoot": {"newRoot": "$grupos_catequesis"}} 
+    ]
+    return list(db.parroquias.aggregate(pipeline))
+
+def obtener_grupo_por_id(id_grupo):
+    db = get_db_connection()
+    parroquia = db.parroquias.find_one(
+        {"grupos_catequesis._id": int(id_grupo)},
+        {"grupos_catequesis.$": 1} 
+    )
+    if parroquia and parroquia.get('grupos_catequesis'):
+        return parroquia['grupos_catequesis'][0]
+    return None
