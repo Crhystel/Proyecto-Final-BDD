@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Parroquias</title>
+  <meta charset="UTF-8">
+  <title>Eliminar Parroquia</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -110,15 +110,6 @@
       background-color: #6a1b9a; /* morado oscuro */
       box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
     }
-    td a[href*="detalles"] {
-      background-color: #ad44ab; /* morado */
-      box-shadow: 0 3px 8px rgba(142, 68, 173, 0.6);
-    }
-
-    td a[href*="detalles"]:hover {
-      background-color: #8f1b9a; /* morado oscuro */
-      box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
-    }
 
     td a[href*="eliminar"] {
       background-color: #d81b60; /* rosa fuerte */
@@ -152,33 +143,35 @@
   </style>
 </head>
 <body>
-  <h1>Parroquias</h1>
+<h1>Detalles de: {{ parroquia.nombre }}</h1>
+<p><strong>Dirección:</strong> {{ parroquia.direccion }}, {{ parroquia.ciudad }}</p>
 
-  <!-- Botones -->
-  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('parroquia.insertar')}}" class="boton-insertar">+ Insertar nueva parroquia</a>
+<hr>
 
-  <table>
+<h2>Grupos de Catequesis</h2>
+<a href="{{ url_for('parroquia.index') }}" class="boton-regreso">← Volver a la lista</a>
+<a href="{{ url_for('parroquia.agregar_grupo', id=parroquia._id) }}" class="boton-insertar">+ Añadir Nuevo Grupo</a>
+
+
+<table>
     <tr>
-      <th>ID</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>Teléfono</th><th>Correo</th><th>Parroquia Principal</th><th>Acciones</th>
+      <th>ID Grupo</th>
+      <th>Nombre del Grupo</th>
     </tr>
-    {% for p in parroquias %}
+  <tbody>
+    {% for grupo in grupos %}
     <tr>
-      <td>{{ p._id }}</td>
-      <td>{{ p.nombre }}</td>
-      <td>{{ p.direccion }}</td>
-      <td>{{ p.ciudad }}</td>
-      <td>{{ p.telefono or '—' }}</td>
-      <td>{{ p.correo_electronico or '—' }}</td>
-      <td>{{ p.nombre_principal}}</td>
-      <td class="acciones">
-        <a href="{{ url_for('parroquia.actualizar', id=p._id) }}">Editar</a>
-        <a href="{{ url_for('parroquia.detalles_parroquia', id=p._id) }}">Ver Grupos</a>
-        <a href="{{ url_for('parroquia.confirmar_eliminar', id=p._id) }}">Eliminar</a>
-      </td>
+      <td>{{ grupo.id_grupo_catequesis }}</td>
+      <td>{{ grupo.nombre_grupo }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="2">No hay grupos registrados para esta parroquia.</td>
     </tr>
     {% endfor %}
-  </table>
+  </tbody>
+</table>
+
+
 </body>
 </html>
-

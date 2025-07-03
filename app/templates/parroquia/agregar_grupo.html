@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Parroquias</title>
+  <meta charset="UTF-8">
+  <title>Eliminar Parroquia</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -110,15 +110,6 @@
       background-color: #6a1b9a; /* morado oscuro */
       box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
     }
-    td a[href*="detalles"] {
-      background-color: #ad44ab; /* morado */
-      box-shadow: 0 3px 8px rgba(142, 68, 173, 0.6);
-    }
-
-    td a[href*="detalles"]:hover {
-      background-color: #8f1b9a; /* morado oscuro */
-      box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
-    }
 
     td a[href*="eliminar"] {
       background-color: #d81b60; /* rosa fuerte */
@@ -129,10 +120,57 @@
       background-color: #ad1457; /* rosa oscuro */
       box-shadow: 0 4px 14px rgba(173, 20, 87, 0.8);
     }
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.3s;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #8e44ad;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #8e44ad;
+      box-shadow: 0 0 6px #8e44ad;
+    }
+     button:hover {
+      background-color: #732d91;
+    }
+    form {
+      background-color: white;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: left;
+    }
 
     @media (max-width: 768px) {
       table, th, td {
         font-size: 13px;
+      }
+      input, select {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+      form {
+        padding: 20px 15px;
       }
 
       h1 {
@@ -148,37 +186,34 @@
         padding: 6px 10px;
         font-size: 12px;
       }
+      button {
+        font-size: 14px;
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Parroquias</h1>
+  {% block content %}
+<h1>Añadir Grupo a: {{ parroquia.nombre }}</h1>
+<a href="{{ url_for('parroquia.detalles_parroquia', id=parroquia._id) }}" class="boton-regreso">← Volver a la lista</a>
 
-  <!-- Botones -->
-  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('parroquia.insertar')}}" class="boton-insertar">+ Insertar nueva parroquia</a>
+<form method="post">
+  <label for="nombre_grupo" style="font-weight: bold">Nombre del Nuevo Grupo</label>
+  <input id="nombre_grupo" name="nombre_grupo" placeholder="Ej: Grupo C - Viernes Tarde" required>
 
-  <table>
-    <tr>
-      <th>ID</th><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th>Teléfono</th><th>Correo</th><th>Parroquia Principal</th><th>Acciones</th>
-    </tr>
-    {% for p in parroquias %}
-    <tr>
-      <td>{{ p._id }}</td>
-      <td>{{ p.nombre }}</td>
-      <td>{{ p.direccion }}</td>
-      <td>{{ p.ciudad }}</td>
-      <td>{{ p.telefono or '—' }}</td>
-      <td>{{ p.correo_electronico or '—' }}</td>
-      <td>{{ p.nombre_principal}}</td>
-      <td class="acciones">
-        <a href="{{ url_for('parroquia.actualizar', id=p._id) }}">Editar</a>
-        <a href="{{ url_for('parroquia.detalles_parroquia', id=p._id) }}">Ver Grupos</a>
-        <a href="{{ url_for('parroquia.confirmar_eliminar', id=p._id) }}">Eliminar</a>
-      </td>
-    </tr>
+  <label for="id_ciclo" style="font-weight: bold">Asignar a un Ciclo Catequístico</label>
+  <select id="id_ciclo" name="id_ciclo" required>
+    <option value="">Seleccione un ciclo</option>
+    {% for ciclo in ciclos %}
+      <option value="{{ ciclo._id }}">{{ ciclo.nombre }}</option>
     {% endfor %}
-  </table>
+  </select>
+
+  <button type="submit">Guardar</button>
+</form>
+
+
+{% endblock %}
 </body>
 </html>
-

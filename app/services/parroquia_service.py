@@ -114,3 +114,33 @@ def eliminar_parroquia(id_parroquia):
         return resultado.deleted_count > 0
     except (ValueError, TypeError):
         return False
+    
+def agregar_grupo_a_parroquia(id_parroquia, nombre_grupo, id_ciclo):
+    db = get_db_connection()
+    
+    ciclo_data = obtener_ciclo_por_id(id_ciclo)
+
+    if not ciclo_data:
+        return False
+    nuevo_grupo = {
+        "id_grupo_catequesis": _get_next_id('grupos_catequesis'), 
+        "nombre_grupo": nombre_grupo,
+        "ciclo_ref": ciclo_data['_id'] 
+    }
+    
+    resultado = db.parroquias.update_one(
+        {"_id": int(id_parroquia)},
+        {"$push": {"grupos_catequesis": nuevo_grupo}}
+    )
+    
+    return resultado.modified_count > 0
+def obtener_grupos_de_parroquia(id_parroquia):
+    db = get_db_connection()
+    parroquia = db.parroquias.find_one(
+        {"_id": int(id_parroquia)},
+        {"grupos_catequesis": 1, "_id": 0} 
+    )
+    
+    if parroquia and 'grupos_catequesis' in parroquia:
+        return parroquia['grupos_catequesis']
+    return []

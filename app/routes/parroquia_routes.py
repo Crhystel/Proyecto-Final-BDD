@@ -1,12 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.services.parroquia_service import (
-    crear_parroquia_grupo,
-    obtener_parroquias,
-    obtener_parroquia_por_id,
-    obtener_parroquias_principales,
-    actualizar_parroquia,
-    eliminar_parroquia
-)
+from app.services.parroquia_service import *
 from app.services.ciclo_catequistico_service import obtener_ciclos
 parroquia_bp = Blueprint('parroquia', __name__, url_prefix='/parroquias')
 
@@ -77,3 +70,36 @@ def confirmar_eliminar(id):
         flash("Parroquia no encontrada.", "danger")
         return redirect(url_for('parroquia.index'))
     return render_template('parroquia/eliminar.html', parroquia=parroquia)
+
+@parroquia_bp.route('/<string:id>/detalles')
+def detalles_parroquia(id):
+    parroquia = obtener_parroquia_por_id(id)
+    if not parroquia:
+        flash("Parroquia no encontrada.", "danger")
+        return redirect(url_for('parroquia.index'))
+    grupos = parroquia.get('grupos_catequesis', [])
+    
+    return render_template('parroquia/detalles.html', parroquia=parroquia, grupos=grupos)
+
+@parroquia_bp.route('/<string:id>/agregar_grupo', methods=['GET', 'POST'])
+def agregar_grupo(id):
+    parroquia = obtener_parroquia_por_id(id)
+    if not parroquia:
+        flash("Parroquia no encontrada.", "danger")
+        return redirect(url_for('parroquia.index'))
+
+    if request.method == 'POST':
+        nombre_grupo = request.form.get('nombre_grupo')
+        id_ciclo = request.form.get('id_ciclo')
+        
+        exito = agregar_grupo_a_parroquia(id, nombre_grupo, id_ciclo)
+        
+        if exito:
+            flash("Grupo añadido exitosamente.", "success")
+        else:
+            flash("No se pudo añadir el grupo.", "danger")
+            
+        return redirect(url_for('parroquia.detalles_parroquia', id=id))
+    
+    lista_ciclos = obtener_ciclos()
+    return render_template('parroquia/agregar_grupo.html', parroquia=parroquia, ciclos=lista_ciclos)

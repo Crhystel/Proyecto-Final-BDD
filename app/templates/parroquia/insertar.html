@@ -106,7 +106,7 @@
     <label for="id_parroquia_principal" style="font-weight: bold; display: block; margin-top: 10px; margin-bottom: 5px;">
       ¿A qué Parroquia Principal pertenece?
     </label>
-    <select id="id_parroquia_principal" name="id_parroquia_principal">
+    <select id="id_parroquia_principal" name="id_parroquia_principal" onchange="toggleGrupoFields()">
       <option value="">Esta es una parroquia Principal</option>
       {% for pp in parroquias_principales %}
         <option value="{{ pp._id}}">{{ pp.nombre }}</option>
