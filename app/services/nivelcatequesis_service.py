@@ -1,12 +1,11 @@
 from app.database import get_db_connection
 from .catequizando_service import _get_next_id
 
-def crear_nivel(orden, nombre_nivel, descripcion, id_libro=None, id_tipo_sacramento=None):
+def crear_nivel( nombre_nivel, descripcion, id_libro=None, id_tipo_sacramento=None):
     db = get_db_connection()
     
     nuevo_nivel = {
         "_id": _get_next_id('niveles_catequesis'),
-        "orden": int(orden),
         "nombre_nivel": nombre_nivel,
         "descripcion": descripcion
     }
@@ -26,16 +25,21 @@ def crear_nivel(orden, nombre_nivel, descripcion, id_libro=None, id_tipo_sacrame
 
 def obtener_niveles():
     db = get_db_connection()
-  
-    cursor = db.niveles_catequesis.find(
-        {}, 
-        {
-            "libro.autor": 0, "libro.editorial": 0, "libro.anio_edicion": 0,
-            "tipo_sacramento.descripcion": 0
-        }
-    ).sort("orden", 1)
     
-    return list(cursor)
+    pipeline = [
+        {
+            "$project": {
+                "_id": 1,
+                "nombre_nivel": 1,
+                "descripcion": 1,
+                "nombre_libro": {"$ifNull": ["$libro.titulo", "— Sin libro —"]},
+                "nombre_sacramento": {"$ifNull": ["$tipo_sacramento.nombre", "— Sin sacramento —"]}
+            }
+        },
+        {"$sort": {"_id": 1}}
+    ]
+    
+    return list(db.niveles_catequesis.aggregate(pipeline))
 
 def obtener_nivel_por_id(id_nivel):
     db = get_db_connection()
@@ -44,13 +48,12 @@ def obtener_nivel_por_id(id_nivel):
     except (ValueError, TypeError):
         return None
     
-def actualizar_nivel(id_nivel, orden, nombre_nivel, descripcion, id_libro=None, id_tipo_sacramento=None):
+def actualizar_nivel(id_nivel, nombre_nivel, descripcion, id_libro=None, id_tipo_sacramento=None):
     db = get_db_connection()
     id_num = int(id_nivel)
     
     update_doc = {
         "$set": {
-            "orden": int(orden),
             "nombre_nivel": nombre_nivel,
             "descripcion": descripcion
         }
@@ -75,7 +78,8 @@ def actualizar_nivel(id_nivel, orden, nombre_nivel, descripcion, id_libro=None, 
 def eliminar_nivel(id_nivel):
     db = get_db_connection()
     try:
-        resultado = db.niveles_catequesis.delete_one({"_id": int(id_nivel)})
+        id_num = int(id_nivel)
+        resultado = db.niveles_catequesis.delete_one({"_id": id_num})
         return resultado.deleted_count > 0
     except (ValueError, TypeError):
         return 0

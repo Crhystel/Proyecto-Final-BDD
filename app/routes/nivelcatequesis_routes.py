@@ -18,7 +18,6 @@ def index():
 def insertar():
     if request.method == 'POST':
         crear_nivel(
-            orden=request.form['orden'],
             nombre_nivel=request.form['nombre_nivel'],
             descripcion=request.form['descripcion'],
             id_libro=request.form.get('id_libro') or None,
@@ -36,7 +35,6 @@ def actualizar(id):
     if request.method == 'POST':
         actualizar_nivel(
             id_nivel=id,
-            orden=request.form['orden'],
             nombre_nivel=request.form['nombre_nivel'],
             descripcion=request.form['descripcion'],
             id_libro=request.form.get('id_libro') or None,
@@ -66,7 +64,7 @@ def confirmar_eliminar(id):
 def eliminar(id):
     exito = eliminar_nivel(id)
     if exito:
-        flash("Nivel eliminado", "info")
+        flash("Nivel eliminado permanentemente.", "info")
     else:
         flash("Error al eliminar el nivel.", "danger")
     return redirect(url_for('nivel.index'))

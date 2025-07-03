@@ -101,29 +101,37 @@
   </style>
 </head>
 <body>
-  <h1>Actualizar Nivel Catequesis</h1>
+  <h1>Actualizar Nivel de Catequesis</h1>
   <form method="post">
-    <input name="orden" type="number" value="{{ nivel.orden }}" required>
-    <input name="nombre_nivel" value="{{ nivel.nombre_nivel }}" required>
-    <textarea name="descripcion" required>{{ nivel.descripcion }}</textarea>
+    
+    <label for="nombre_nivel">Nombre del Nivel</label>
+    <input id="nombre_nivel" name="nombre_nivel" value="{{ nivel.nombre_nivel }}" required>
+    
+    <label for="descripcion">Descripción</label>
+    <textarea id="descripcion" name="descripcion" required>{{ nivel.descripcion }}</textarea>
+    
     <label for="id_libro">Libro Asociado</label>
     <select id="id_libro" name="id_libro">
-      <option value="">Sin libro asociado</option>
+      <option value="">— Sin libro asociado —</option>
       {% for libro in libros %}
-      <option value="{{ libro._id }}"  {% if nivel.libro and nivel.libro.id_libro == libro._id %}selected{% endif %}>{{ libro.titulo }}</option>
+      <option value="{{ libro._id }}" {% if nivel.libro and nivel.libro._id == libro._id %}selected{% endif %}>
+        {{ libro.titulo }}
+      </option>
       {% endfor %}
     </select>
 
     <label for="id_tipo_sacramento">Sacramento Asociado</label>
     <select id="id_tipo_sacramento" name="id_tipo_sacramento">
-      <option value="">Sin sacramento asociado</option>
+      <option value="">— Sin sacramento asociado —</option>
       {% for tipo in tipos %}
-      <option value="{{ tipo._id }}"
-        {% if nivel.tipo_sacramento and nivel.tipo_sacramento.id_sacramento_tipo == tipo._id %}selected{% endif %}>{{ tipo.nombre }}</option>
+      <option value="{{ tipo._id }}" {% if nivel.tipo_sacramento and nivel.tipo_sacramento._id == tipo._id %}selected{% endif %}>
+        {{ tipo.nombre }}
+      </option>
       {% endfor %}
     </select>
 
-    <button type="submit">Actualizar</button>
+    <button type="submit">Guardar Cambios</button>
+    <a href="{{ url_for('nivel.index') }}" class="cancelar">Cancelar</a>
   </form>
 </body>
 </html>

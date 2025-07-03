@@ -134,19 +134,18 @@
   </style>
 </head>
 <body>
-  <h1>Lista de Niveles de Catequesis</h1>
-  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('nivel.insertar') }}" class="boton-insertar">+ Nuevo nivel</a>
+  <h1>Niveles de Catequesis</h1>
+  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('nivel.insertar') }}" class="boton-insertar">+ Crear Nuevo Nivel</a>
   
   <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Orden</th>
-        <th>Nombre</th>
+        <th>Id</th>
+        <th>Nombre del Nivel</th>
         <th>Descripción</th>
-        <th>Libro</th>
-        <th>Tipo Sacramento</th>
+        <th>Libro Asociado</th>
+        <th>Sacramento</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -154,16 +153,17 @@
       {% for n in niveles %}
       <tr>
         <td>{{ n._id }}</td>
-        <td>{{ n.orden }}</td>
-        <td>{{ n.nombre_nivel }}</td>
+        <td><strong>{{ n.nombre_nivel }}</strong></td>
         <td>{{ n.descripcion }}</td>
-        <td>{{ n.nombre_libro or '—' }}</td>
-        <td>{{ n.nombre_sacramento or '—' }}</td>
+        <td>{{ n.nombre_libro }}</td>
+        <td>{{ n.nombre_sacramento }}</td>
         <td class="acciones">
           <a href="{{ url_for('nivel.actualizar', id=n._id) }}" class="editar">Editar</a>
           <a href="{{ url_for('nivel.confirmar_eliminar', id=n._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;">No hay niveles de catequesis registrados.</td></tr>
       {% endfor %}
     </tbody>
   </table>
