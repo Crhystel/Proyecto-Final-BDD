@@ -95,10 +95,18 @@
   </style>
 </head>
 <body>
-<h1>¿Estás seguro de eliminar esta persona?</h2>
-<form method="POST">
-    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
-    <a href="{{ url_for('persona.index') }}" class="btn btn-secondary">Cancelar</a>
-</form>
+ <div class="container">
+    <h1>Confirmar Eliminación</h1>
+    <p>¿Estás seguro de que quieres eliminar a 
+       <strong class="nombre-persona">{{ persona.nombre }} {{ persona.apellido }}</strong>? 
+       Esta acción no se puede deshacer.
+    </p>
+    <form method="POST" action="{{ url_for('persona.eliminar', id=persona._id) }}">
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+            <a href="{{ url_for('persona.index') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+  </div>
 </body>
 </html>

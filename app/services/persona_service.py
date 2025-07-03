@@ -1,7 +1,4 @@
-# app/services/persona_service.py
-
 from app.database import get_db_connection
-# Asumimos que _get_next_id está en catequizando_service
 from .catequizando_service import _get_next_id
 
 def crear_persona(nombre, apellido, tipo_persona, telefono, correo):

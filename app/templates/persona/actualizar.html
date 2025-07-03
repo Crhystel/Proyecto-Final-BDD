@@ -113,19 +113,21 @@
 
     <label for="tipo_persona">Tipo de Persona</label>
     <select name="tipo_persona" id="tipo_persona" required>
-      <option value="M" {% if persona.tipo_persona == 'M' %}selected{% endif %}>Mamá</option>
-      <option value="P" {% if persona.tipo_persona == 'P' %}selected{% endif %}>Papá</option>
-      <option value="A" {% if persona.tipo_persona == 'A' %}selected{% endif %}>Madrina</option>
-      <option value="B" {% if persona.tipo_persona == 'B' %}selected{% endif %}>Padrino</option>
+        <!-- CORREGIDO: Valores y lógica de selección estandarizados -->
+        <option value="M" {% if persona.tipo_persona == 'M' %}selected{% endif %}>Madre</option>
+        <option value="P" {% if persona.tipo_persona == 'P' %}selected{% endif %}>Padre</option>
+        <option value="N" {% if persona.tipo_persona == 'N' %}selected{% endif %}>Madrina</option>
+        <option value="D" {% if persona.tipo_persona == 'D' %}selected{% endif %}>Padrino</option>
     </select>
 
     <label for="telefono">Teléfono</label>
-    <input type="text" name="telefono" id="telefono" value="{{ persona.telefono }}">
+    <input type="text" name="telefono" id="telefono" value="{{ persona.telefono or '' }}">
 
     <label for="correo">Correo</label>
-    <input type="email" name="correo" id="correo" value="{{ persona.correo }}">
+    <input type="email" name="correo" id="correo" value="{{ persona.correo or '' }}">
 
-    <button type="submit">Actualizar</button>
+    <button type="submit">Actualizar Cambios</button>
+    <a href="{{ url_for('persona.index') }}" class="cancelar">Cancelar</a>
   </form>
 </body>
 </html>

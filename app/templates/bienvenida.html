@@ -93,78 +93,20 @@
 <body>
   <div class="container">
     <div class="title">Bienvenido<br>al Sistema de Catequesis</div>
-    <div class="subtitle">Sigue los pasos en orden. Cada paso desbloquea el siguiente.</div>
 
     <div class="links">
-      <button onclick="nextStep(1)" disabled>1. Crear Parroquias</button>
-      <button onclick="nextStep(2)" disabled>2. Crear Usuarios</button>
-      <button onclick="nextStep(3)" disabled>3. Crear Catequistas</button>
-      <button onclick="nextStep(4)" disabled>4. Crear Catequizandos</button>
-      <button onclick="nextStep(5)" disabled>5. Crear Ficha de Datos</button>
-      <button onclick="nextStep(6)" disabled>6. Crear Libros</button>
-      <button onclick="nextStep(7)" disabled>7. Crear Tipo de Sacramento</button>
-      <button onclick="nextStep(8)" disabled>8. Crear Nivel</button>
-      <button onclick="nextStep(9)" disabled>9. Crear Ciclo</button>
-      <button onclick="nextStep(10)" disabled>10. Crear Grupo</button>
-      <button onclick="nextStep(11)" disabled>11. Unir Catequistas a un Grupo</button>
-      <button onclick="nextStep(12)" disabled>12. Crear Inscripciones</button>
-      <button onclick="nextStep(13)" disabled>13. Crear Padres de Familia y Padrinos</button>
-      <button onclick="nextStep(14)" disabled>14. Generar un certificado</button>
+      <div class="links">
+      <a href="{{ url_for('parroquia.index') }}">Gestionar Parroquias</a>
+      <a href="{{ url_for('usuario.index') }}">Gestionar Usuarios</a>
+      <a href="{{ url_for('catequista.index') }}">Gestionar Catequistas</a>
+      <a href="{{ url_for('catequizando.index') }}">Gestionar Catequizandos</a>
+      <a href="{{ url_for('persona.index') }}">Gestionar Familiares/Padrinos</a>
+      
+    </div>
     </div>
   </div>
 
-  <script>
-    // Detecta si llegaste desde fuera (no desde una de las rutas del sistema)
-    document.addEventListener("DOMContentLoaded", () => {
-      const from = document.referrer;
-      const isInternal = from.includes(window.location.origin) && (
-        from.includes("/parroquias/") ||
-        from.includes("/usuarios/") ||
-        from.includes("/catequistas/") ||
-        from.includes("/catequizandos/") ||
-        from.includes("/fichas/") ||
-        from.includes("/libros/") ||
-        from.includes("/tipos_sacramento/") ||
-        from.includes("/niveles/") ||
-        from.includes("/ciclos/") ||
-        from.includes("/grupos/") ||
-        from.includes("/grupos_catequistas/") ||
-        from.includes("/inscripciones/") ||
-        from.includes("/personas/") ||
-        from.includes("/certificados/")
-      );
   
-      // Si no es interno, reinicia el progreso
-      if (!isInternal) {
-        localStorage.setItem("maxStep", "1");
-      }
-  
-      // Habilitar los pasos según el progreso
-      const maxStep = parseInt(localStorage.getItem("maxStep") || "1");
-      const buttons = document.querySelectorAll('.links button');
-  
-      for (let i = 0; i < maxStep; i++) {
-        buttons[i].disabled = false;
-      }
-    });
-  
-    function nextStep(currentStep) {
-      const buttons = document.querySelectorAll('.links button');
-  
-      // Actualiza el máximo paso alcanzado en localStorage
-      let maxStep = parseInt(localStorage.getItem("maxStep") || "1");
-      if (currentStep + 1 > maxStep) {
-        localStorage.setItem("maxStep", currentStep + 1);
-      }
-  
-      // Redirige a la página correspondiente
-      const routes = [ "/parroquias/", "/usuarios/", "/catequistas/", "/catequizandos/",
-        "/fichas/", "/libros/", "/tipos_sacramento/", "/niveles/", "/ciclos/",
-        "/grupos/", "/grupos_catequistas/", "/inscripciones/", "/personas/" , "/certificados/"
-      ];
-      window.location.href = routes[currentStep - 1];
-    }
-  </script>
   
   
 </body>
