@@ -5,7 +5,7 @@
   <title>Actualizar Tipo de Sacramento</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -20,90 +20,132 @@
         linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
         url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
       background-size: cover;
-      text-align: center;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    h1 {
-      color: #ad1457;
-      font-size: 28px;
+    /* --- ESTILOS UNIFICADOS PARA FORMULARIOS --- */
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      padding: 30px 40px;
+    }
+    
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      color: #6a1b9a;
+      font-size: 32px;
+      text-align: center;
+      margin-top: 0;
       margin-bottom: 30px;
     }
 
-    form {
-      background-color: white;
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(173, 20, 87, 0.2);
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 8px;
       text-align: left;
     }
 
-    input {
+    input, textarea, select {
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 18px;
-      border: 1.8px solid #f48fb1;
-      border-radius: 8px;
-      font-size: 15px;
-      font-family: 'Poppins', sans-serif;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #ad1457;
-      box-shadow: 0 0 8px #ad1457;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      background-color: #ad1457;
-      color: white;
-      font-weight: 600;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
       font-size: 16px;
-      border: none;
-      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s ease;
+      background-color: #fdfdfd;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #ff6b81;
+      box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.25);
+    }
+
+    .form-actions {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      border: none;
     }
 
-    button:hover {
-      background-color: #880e4f;
+    .btn-primary {
+      background: #ff6b81;
+      color: white;
     }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 22px;
-      }
+    .btn-primary:hover {
+      background: #ff4d73;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255, 107, 129, 0.3);
+    }
+    
+    .btn-secondary {
+      background-color: #f0f0f0;
+      color: #555;
+      border: 1px solid #ddd;
+    }
 
-      form {
-        padding: 20px 15px;
-      }
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+      border-color: #ccc;
+    }
 
-      input {
-        font-size: 14px;
-        padding: 10px 12px;
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
       }
-
-      button {
-        font-size: 14px;
-        padding: 12px;
+      .form-title {
+        font-size: 26px;
+      }
+      .form-actions {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Actualizar Tipo de Sacramento</h1>
-  <form method="post">
-    <div>
-      <label for="nombre">Nombre</label>
-      <input id="nombre" name="nombre" value="{{ tipo.nombre }}" required>
-    </div>
-    <button type="submit">Guardar Cambios</button>
-    <a href="{{ url_for('tiposacramento.index') }}" class="cancelar">Cancelar</a>
-  </form>
+  <div class="container">
+    <h1 class="form-title">Actualizar Tipo de Sacramento</h1>
+    <form method="post">
+      
+      <div class="form-group">
+        <label for="nombre">Nombre del Sacramento</label>
+        <input id="nombre" name="nombre" value="{{ tipo.nombre }}" required>
+      </div>
+
+      <div class="form-actions">
+        <a href="{{ url_for('tiposacramento.index') }}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      
+    </form>
+  </div>
 </body>
 </html>

@@ -18,7 +18,7 @@ def index():
 def insertar():
     if request.method == 'POST':
         crear_nivel(
-            nombre_nivel=request.form['nombre_nivel'],
+            nombre_nivel=request.form['nombre'],
             descripcion=request.form['descripcion'],
             id_libro=request.form.get('id_libro') or None,
             id_tipo_sacramento=request.form.get('id_tipo_sacramento') or None
@@ -35,7 +35,7 @@ def actualizar(id):
     if request.method == 'POST':
         actualizar_nivel(
             id_nivel=id,
-            nombre_nivel=request.form['nombre_nivel'],
+            nombre_nivel=request.form['nombre'],
             descripcion=request.form['descripcion'],
             id_libro=request.form.get('id_libro') or None,
             id_tipo_sacramento=request.form.get('id_tipo_sacramento') or None

@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registrar Nivel Catequesis</title>
+  <title>Registrar Nivel de Catequesis</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -20,114 +20,159 @@
         linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
         url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
       background-size: cover;
-      text-align: center;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    h1 {
+    /* --- ESTILOS UNIFICADOS PARA FORMULARIOS --- */
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      padding: 30px 40px;
+    }
+    
+    .form-title {
+      font-family: 'Playfair Display', serif;
       color: #6a1b9a;
       font-size: 32px;
+      text-align: center;
+      margin-top: 0;
       margin-bottom: 30px;
     }
 
-    form {
-      background-color: white;
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: left;
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
     input, textarea, select {
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 18px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 15px;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
       font-family: 'Poppins', sans-serif;
-      transition: border-color 0.3s;
+      transition: all 0.3s ease;
+      background-color: #fdfdfd;
+    }
+    
+    textarea {
+        resize: vertical;
+        min-height: 120px;
     }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: #8e44ad;
-      box-shadow: 0 0 6px #8e44ad;
+      border-color: #ff6b81;
+      box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.25);
     }
 
-    textarea {
-      resize: vertical;
-      min-height: 100px;
+    .form-actions {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
     }
 
-    button {
-      width: 100%;
+    .btn {
       padding: 14px;
-      background-color: #8e44ad;
-      color: white;
-      font-weight: 600;
+      border-radius: 10px;
       font-size: 16px;
-      border: none;
-      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      border: none;
     }
 
-    button:hover {
-      background-color: #732d91;
+    .btn-primary {
+      background: #ff6b81;
+      color: white;
     }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 24px;
-      }
+    .btn-primary:hover {
+      background: #ff4d73;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255, 107, 129, 0.3);
+    }
+    
+    .btn-secondary {
+      background-color: #f0f0f0;
+      color: #555;
+      border: 1px solid #ddd;
+    }
 
-      form {
-        padding: 20px 15px;
-      }
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
+      border-color: #ccc;
+    }
 
-      input, textarea, select {
-        font-size: 14px;
-        padding: 10px 12px;
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
       }
-
-      button {
-        font-size: 14px;
-        padding: 12px;
+      .form-title {
+        font-size: 26px;
+      }
+      .form-actions {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Registrar Nivel de Catequesis</h1>
-  <form method="post">
-    
-    <label for="nombre_nivel">Nombre del Nivel</label>
-    <input id="nombre_nivel" name="nombre_nivel" placeholder="Ej: Nivel 1: Iniciación" required>
-    
-    <label for="descripcion">Descripción</label>
-    <textarea id="descripcion" name="descripcion" placeholder="Describe el propósito de este nivel" required></textarea>
+  <div class="container">
+    <h1 class="form-title">Registrar Nivel de Catequesis</h1>
+    <form method="post">
+      <div class="form-group">
+        <label for="nombre_nivel">Nombre del Nivel</label>
+        <input id="nombre_nivel" name="nombre_nivel" placeholder="Ej: Nivel 1: Iniciación" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" placeholder="Describe el propósito y los temas principales de este nivel" required></textarea>
+      </div>
 
-    <label for="id_libro">Libro Asociado (Opcional)</label>
-    <select id="id_libro" name="id_libro">
-      <option value="">— Sin libro asociado —</option>
-      {% for libro in libros %}
-      <option value="{{ libro._id }}">{{ libro.titulo }}</option>
-      {% endfor %}
-    </select>
+      <div class="form-group">
+        <label for="id_libro">Libro Asociado (Opcional)</label>
+        <select id="id_libro" name="id_libro">
+          <option value=""> Sin libro asociado </option>
+          {% for libro in libros %}
+          <option value="{{ libro._id }}">{{ libro.titulo }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <label for="id_tipo_sacramento">Sacramento Asociado (Opcional)</label>
-    <select id="id_tipo_sacramento" name="id_tipo_sacramento">
-      <option value="">— Sin sacramento asociado —</option>
-      {% for tipo in tipos %}
-      <option value="{{ tipo._id }}">{{ tipo.nombre }}</option>
-      {% endfor %}
-    </select>
+      <div class="form-group">
+        <label for="id_tipo_sacramento">Sacramento Asociado (Opcional)</label>
+        <select id="id_tipo_sacramento" name="id_tipo_sacramento">
+          <option value=""> Sin sacramento asociado </option>
+          {% for tipo in tipos %}
+          <option value="{{ tipo._id }}">{{ tipo.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <button type="submit">Guardar Nivel</button>
-    <a href="{{ url_for('nivel.index') }}" class="cancelar">Cancelar</a>
-  </form>
+      <div class="form-actions">
+        <a href="{{ url_for('nivel.index') }}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Guardar Nivel</button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>

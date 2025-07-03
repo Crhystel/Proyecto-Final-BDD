@@ -57,26 +57,25 @@
       gap: 16px;
     }
 
-    .links button {
+    .links a {
+      display: block;
       padding: 14px;
       background: #ff6b81;
       color: white;
       border-radius: 10px;
-      border: none;
       font-size: 16px;
       font-weight: 600;
+      text-decoration: none;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
       font-family: 'Poppins', sans-serif;
+      text-align: center; 
     }
 
-    .links button:hover:not(:disabled) {
+    .links a:hover {
       background: #ff4d73;
-    }
-
-    .links button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     @media (max-width: 600px) {
@@ -95,7 +94,6 @@
     <div class="title">Bienvenido<br>al Sistema de Catequesis</div>
 
     <div class="links">
-      <div class="links">
       <a href="{{ url_for('parroquia.index') }}">Gestionar Parroquias</a>
       <a href="{{ url_for('usuario.index') }}">Gestionar Usuarios</a>
       <a href="{{ url_for('catequista.index') }}">Gestionar Catequistas</a>
@@ -106,13 +104,7 @@
       <a href="{{ url_for('tiposacramento.index') }}">Gestionar Sacramentos</a>
       <a href="{{ url_for('ciclo.index') }}">Gestionar Ciclo Catequísticos</a>
       <a href="{{ url_for('tipo_documento.index') }}">Gestionar Documentos</a>
-      
-    </div>
     </div>
   </div>
-
-  
-  
-  
 </body>
 </html>

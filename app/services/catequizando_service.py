@@ -82,7 +82,7 @@ def obtener_catequizandos():
         {"$project": {
             "_id": 1, "nombre": 1, "apellido": 1, "documento_identidad": 1, "fecha_nacimiento": 1, 
             "tiene_bautismo": 1, "nombre_parroquia": "$parroquia_info.nombre"}},
-        {"$sort": {"apellido": 1, "nombre": 1}}
+        {"$sort": {"_id": 1}}  # Ordenar por ID ascendente
     ]
     return list(db.catequizandos.aggregate(pipeline))
 
