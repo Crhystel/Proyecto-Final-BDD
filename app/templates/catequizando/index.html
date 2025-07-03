@@ -142,6 +142,7 @@
     <thead>
       <tr>
         <!-- CABECERAS ACTUALIZADAS -->
+        <th>ID</th>
         <th>Nombre Completo</th>
         <th>Documento</th>
         <th>Fecha Nac.</th>
@@ -154,6 +155,7 @@
       {% for c in catequizandos %}
       <tr>
         <!-- CELDAS ACTUALIZADAS -->
+         <td>{{ c._id }}</td>
         <td>{{ c.nombre }} {{ c.apellido }}</td>
         <td>{{ c.documento_identidad or '—' }}</td>
         <td>{{ c.fecha_nacimiento.strftime('%d-%m-%Y') if c.fecha_nacimiento else '—' }}</td>

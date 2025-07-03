@@ -30,7 +30,7 @@ def obtener_niveles():
         {
             "$project": {
                 "_id": 1,
-                "nombre_nivel": 1,
+                "nombre": "$nombre_nivel",
                 "descripcion": 1,
                 "nombre_libro": {"$ifNull": ["$libro.titulo", "— Sin libro —"]},
                 "nombre_sacramento": {"$ifNull": ["$tipo_sacramento.nombre", "— Sin sacramento —"]}

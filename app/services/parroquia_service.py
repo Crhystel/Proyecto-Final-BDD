@@ -146,7 +146,16 @@ def obtener_grupos_de_parroquia(id_parroquia):
     )
     
     if parroquia and 'grupos_catequesis' in parroquia:
-        return parroquia['grupos_catequesis']
+        grupos = []
+        for g in parroquia['grupos_catequesis']:
+            grupo_info = {
+                '_id': g.get('id_grupo_catequesis'), 
+                'nombre': g.get('nombre_grupo', '').strip(),
+                'ciclo': g.get('ciclo_ref')
+            }
+            grupos.append(grupo_info)
+        return grupos
+    
     return []
 
 
@@ -174,7 +183,6 @@ def obtener_detalles_completos_parroquia(id_parroquia):
             "as": "nivel_completo"
         }},
         {"$unwind": {"path": "$nivel_completo", "preserveNullAndEmptyArrays": True}},
-        
         {"$group": {
             "_id": "$_id",
             "nombre": {"$first": "$nombre"},
@@ -190,8 +198,13 @@ def obtener_detalles_completos_parroquia(id_parroquia):
                         "then": {
                             "id_grupo_catequesis": "$grupos_catequesis.id_grupo_catequesis",
                             "nombre_grupo": "$grupos_catequesis.nombre_grupo",
-                            "ciclo_info": {"$ifNull": ["$ciclo_completo", None]},
-                            "nivel_info": {"$ifNull": ["$nivel_completo", None]}
+                            "nombre_ciclo": {
+                                "$ifNull": ["$ciclo_completo.nombre", "Sin ciclo asignado"]
+                            },
+                        
+                            "nombre_nivel": {
+                                "$ifNull": ["$nivel_completo.nombre", "Sin nivel"]
+                            }
                         },
                         "else": "$$REMOVE" 
                     }
@@ -199,7 +212,9 @@ def obtener_detalles_completos_parroquia(id_parroquia):
             }
         }}
     ]
-
     resultado = list(db.parroquias.aggregate(pipeline))
-        
+    if resultado and "grupos_catequesis" in resultado[0]:
+        if len(resultado[0]["grupos_catequesis"]) == 1 and not resultado[0]["grupos_catequesis"][0]:
+            resultado[0]["grupos_catequesis"] = []
+            
     return resultado[0] if resultado else None

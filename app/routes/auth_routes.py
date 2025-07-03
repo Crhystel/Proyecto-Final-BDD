@@ -1,5 +1,3 @@
-# app/routes/auth_routes.py (MODIFICADO)
-
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.services.auth_service import verificar_credenciales
 

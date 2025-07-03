@@ -104,84 +104,88 @@
   </style>
 </head>
 <body>
-   <h1>Registrar Nuevo Catequizando</h1>
-  <form method="post" action="{{ url_for('catequizando.insertar') }}">
-    
-    <div class="form-group">
-      <label for="nombre">Nombre:</label>
-      <input id="nombre" name="nombre" placeholder="Nombre del catequizando" required />
+    <div class="container">
+        <h1>Crear Nuevo Catequizando</h1>
+        <a href="{{ url_for('catequizando.index') }}" class="boton-regreso">← Volver a la lista</a>
+        
+        <div class="section-card">
+            <form method="post" action="{{ url_for('catequizando.insertar') }}">
+                
+                <h2>Datos Personales</h2>
+                <div class="form-grid">
+                    <div><label for="nombre">Nombre:</label><input type="text" id="nombre" name="nombre" required></div>
+                    <div><label for="apellido">Apellido:</label><input type="text" id="apellido" name="apellido" required></div>
+                    <div><label for="documento_identidad">Documento de Identidad:</label><input type="text" id="documento_identidad" name="documento_identidad"></div>
+                    <div><label for="fecha_nacimiento">Fecha de Nacimiento:</label><input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required></div>
+                </div>
+
+                <h2>Datos Parroquiales</h2>
+                <div class="form-grid">
+                    <div>
+                        <label for="id_parroquia">Parroquia de Registro:</label>
+                        <select id="id_parroquia" name="id_parroquia">
+                            <option value="">-- Ninguna --</option>
+                            {% for p in parroquias %}<option value="{{ p._id }}">{{ p.nombre }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="fecha_registro">Fecha de Registro:</label>
+                        <input type="date" id="fecha_registro" name="fecha_registro" value="{{ now.strftime('%Y-%m-%d') }}" required>
+                    </div>
+                </div>
+
+                <hr style="margin: 30px 0;">
+
+                <h2>Datos de Bautismo</h2>
+                <div>
+                    <label>
+                        <input type="checkbox" id="tiene_bautismo_check" name="tiene_bautismo" style="width: auto; margin-right: 10px;">
+                        ¿El catequizando está bautizado?
+                    </label>
+                </div>
+                <div id="bautismo_details" class="form-grid" style="display: none; margin-top: 15px;">
+                    <div>
+                        <label for="lugar_bautismo">Lugar de Bautismo:</label>
+                        <input type="text" id="lugar_bautismo_input" name="lugar_bautismo">
+                    </div>
+                    <div>
+                        <label for="fecha_bautismo">Fecha de Bautismo:</label>
+                        <input type="date" id="fecha_bautismo_input" name="fecha_bautismo">
+                    </div>
+                </div>
+
+                <button type="submit">Crear Catequizando</button>
+            </form>
+        </div>
     </div>
 
-    <div class="form-group">
-      <label for="apellido">Apellido:</label>
-      <input id="apellido" name="apellido" placeholder="Apellido del catequizando" required />
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const checkbox = document.getElementById('tiene_bautismo_check');
+            const detailsContainer = document.getElementById('bautismo_details');
+            const lugarInput = document.getElementById('lugar_bautismo_input');
+            const fechaInput = document.getElementById('fecha_bautismo_input');
 
-    <div class="form-group">
-      <label for="documento_identidad">Documento de Identidad:</label>
-      <input id="documento_identidad" name="documento_identidad" type="number" placeholder="Cédula o pasaporte" required />
-    </div>
+            function toggleBautismoFields() {
+                if (checkbox.checked) {
+                    detailsContainer.style.display = 'grid'; // 'grid' para que coincida con .form-grid
+                    lugarInput.required = true;
+                    fechaInput.required = true;
+                } else {
+                    detailsContainer.style.display = 'none';
+                    lugarInput.required = false;
+                    fechaInput.required = false;
+                    lugarInput.value = '';
+                    fechaInput.value = '';
+                }
+            }
 
-    <div class="form-group">
-      <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-      <input id="fecha_nacimiento" name="fecha_nacimiento" type="date" required />
-    </div>
+            checkbox.addEventListener('change', toggleBautismoFields);
 
-    <div class="form-group">
-      <label for="fecha_registro">Fecha de Registro:</label>
-      <input id="fecha_registro" name="fecha_registro" type="date" value="{{ now.strftime('%Y-%m-%d') }}" required />
-    </div>
+            toggleBautismoFields();
+        });
+    </script>
 
-    <div class="form-group">
-      <label for="id_parroquia">Parroquia de Registro:</label>
-      <select id="id_parroquia" name="id_parroquia" required>
-        <option value="">-- Seleccione una parroquia --</option>
-        {% for parroquia in parroquias %}
-          <option value="{{ parroquia._id }}">{{ parroquia.nombre }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <hr>
-    
-    <div class="checkbox-group">
-      <input id="tiene_bautismo" name="tiene_bautismo" type="checkbox" onchange="toggleBautismoDetails()">
-      <label for="tiene_bautismo">¿Ya está bautizado?</label>
-    </div>
-
-    <div id="bautismo-details" class="hidden">
-      <div class="form-group">
-        <label for="lugar_bautismo">Lugar de Bautismo:</label>
-        <input id="lugar_bautismo" name="lugar_bautismo" placeholder="Parroquia o capilla" />
-      </div>
-      <div class="form-group">
-        <label for="fecha_bautismo">Fecha de Bautismo:</label>
-        <input id="fecha_bautismo" name="fecha_bautismo" type="date" />
-      </div>
-    </div>
-    
-    <button type="submit">Crear y Continuar a Detalles</button>
-    <a href="{{ url_for('catequizando.index') }}" class="cancelar">Cancelar</a>
-  </form>
-
-  <script>
-    function toggleBautismoDetails() {
-      const checkbox = document.getElementById('tiene_bautismo');
-      const detailsDiv = document.getElementById('bautismo-details');
-      const lugarInput = document.getElementById('lugar_bautismo');
-      const fechaInput = document.getElementById('fecha_bautismo');
-      
-      if (checkbox.checked) {
-        detailsDiv.classList.remove('hidden');
-        lugarInput.required = true; // Hacer los campos requeridos si se marca
-        fechaInput.required = true;
-      } else {
-        detailsDiv.classList.add('hidden');
-        lugarInput.required = false; // Dejar de requerirlos si se desmarca
-        lugarInput.value = '';     // Limpiar valores
-        fechaInput.value = '';
-      }
-    }
-  </script>
 </body>
 </html>

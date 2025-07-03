@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado de Aprobación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .page { width: 800px; height: 565px; background: white; border: 10px solid #c8a2c8; padding: 40px; text-align: center; position: relative; display: flex; flex-direction: column; justify-content: center; }
+        .header { font-family: 'Playfair+Display', serif; font-size: 48px; color: #6a1b9a; margin-bottom: 20px; }
+        .sub-header { font-size: 20px; color: #8e44ad; margin-bottom: 30px; }
+        .certifies-that { font-size: 16px; margin-bottom: 15px; }
+        .name { font-family: 'Playfair Display', serif; font-size: 36px; color: #4a148c; border-bottom: 2px solid #e0b0ff; display: inline-block; padding-bottom: 5px; margin-bottom: 25px; }
+        .description { font-size: 18px; line-height: 1.6; margin-bottom: 10px; }
+        .date-info { font-size: 14px; color: #555; margin-bottom: 40px; } /* Estilo para la fecha */
+        .signatures { display: flex; justify-content: space-around; position: absolute; bottom: 60px; left: 40px; right: 40px; }
+        .signature { width: 40%; }
+        .signature p { margin: 0; }
+        .signature .line { border-top: 1px solid #333; margin: 40px 0 10px 0; }
+        .no-print { position: fixed; top: 10px; right: 10px; }
+        .btn-print { padding: 10px 20px; background: #8e44ad; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        @media print {
+            body { background: none; }
+            .no-print { display: none; }
+            .page { border: 10px solid black; }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <button onclick="window.print()" class="btn-print">Imprimir Certificado</button>
+    </div>
+    <div class="page">
+        <div class="header">Certificado de Aprobación</div>
+        <div class="sub-header">{{ datos.parroquia_nombre }}</div>
+
+        <p class="certifies-that">Certifica que:</p>
+
+        <div class="name">{{ datos.catequizando_nombre_completo }}</div>
+
+        <p class="description">
+            Ha completado satisfactoriamente el nivel de catequesis: <br>
+            <strong>{{ datos.nivel_nombre }}</strong>
+        </p>
+
+        <!-- === FECHA AÑADIDA AQUÍ === -->
+        <p class="date-info">
+            Finalizado el {{ datos.fecha_aprobacion.strftime('%d de %B de %Y') if datos.fecha_aprobacion else 'Fecha no registrada' }}.
+        </p>
+
+        <div class="signatures">
+            <div class="signature">
+                <div class="line"></div>
+                <p>Párroco</p>
+            </div>
+            <div class="signature">
+                <div class="line"></div>
+                <p>Catequista: {{ datos.catequista_aprobador_nombre }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
