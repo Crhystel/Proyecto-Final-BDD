@@ -180,7 +180,6 @@
         <td>{{ 'Principal' if c.rol == 'P' else 'Ayudante' }}</td>
         <td class="acciones">
           <a href="{{ url_for('catequista.actualizar', id=c._id) }}">Editar</a>
-          <a href="{{ url_for('catequista.asignar_grupos', id=c._id) }}">Asignar Grupos</a>
           <a href="{{ url_for('catequista.confirmar_eliminar', id=c._id) }}">Eliminar</a>
         </td>
       </tr>
