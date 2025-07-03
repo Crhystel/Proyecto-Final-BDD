@@ -12,6 +12,7 @@ from app.services.nivelcatequesis_service import obtener_niveles
 from app.services.tipo_sacramento_service import obtener_tipos_sacramento
 from app.services.persona_service import obtener_personas # Para padres y padrinos
 from app.services.tipo_documento_service import obtener_tipos_documento # Para documentos
+from app.services.catequizando_service import _parse_date_from_form 
 
 catequizando_bp = Blueprint("catequizando", __name__, url_prefix='/catequizandos')
 
@@ -84,15 +85,16 @@ def detalles(id):
 # --- 1. Datos Principales y Ficha ---
 @catequizando_bp.route('/<int:id>/actualizar-principal', methods=['POST'])
 def actualizar_datos_principales(id):
+    parroquia_ref = request.form.get("parroquia_ref")
     datos = {
         "nombre": request.form.get("nombre"), "apellido": request.form.get("apellido"),
-        "fecha_nacimiento": datetime.datetime.fromisoformat(request.form.get("fecha_nacimiento")),
+        "fecha_nacimiento": _parse_date_from_form(request.form.get("fecha_nacimiento")),
         "documento_identidad": request.form.get("documento_identidad"),
-        "fecha_registro": datetime.datetime.fromisoformat(request.form.get("fecha_registro")),
-        "parroquia_ref": int(request.form.get("parroquia_ref")),
+        "fecha_registro": _parse_date_from_form(request.form.get("fecha_registro")),
+        "parroquia_ref": int(parroquia_ref) if parroquia_ref else None,
         "tiene_bautismo": "tiene_bautismo" in request.form,
         "lugar_bautismo": request.form.get("lugar_bautismo"),
-        "fecha_bautismo": datetime.datetime.fromisoformat(request.form.get("fecha_bautismo")) if request.form.get("fecha_bautismo") else None
+        "fecha_bautismo": _parse_date_from_form(request.form.get('fecha_bautismo')) if request.form.get("fecha_bautismo") else None
     }
     actualizar_catequizando_principal(id, datos)
     flash("Datos principales actualizados.", "success")
@@ -188,7 +190,7 @@ def agregar_una_sesion(id):
 def registrar_un_sacramento(id):
     datos_sacramento = {
         "lugar": request.form.get("lugar_sacramento"),
-        "fecha_sacramento": datetime.datetime.fromisoformat(request.form.get("fecha_sacramento")),
+        "fecha_sacramento":_parse_date_from_form(request.form.get("fecha_sacramento")),
         "observaciones": request.form.get("observaciones_sacramento"),
         "tipo_sacramento_ref": request.form.get("id_tipo_sacramento"),
         "padre_ref": request.form.get("id_padre"),

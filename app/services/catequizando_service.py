@@ -1,3 +1,4 @@
+from flask import request
 from app.database import get_db_connection
 from bson import ObjectId
 import datetime
@@ -23,7 +24,14 @@ def sincronizar_contador(collection_name):
         {'$max':{'sequence_value':max_id}},
         upsert=True
     )
-    
+
+def _parse_date_from_form(date_string):
+    if not date_string:
+        return None
+    try:
+        return _parse_date_from_form(request.form.get(date_string))
+    except (ValueError, TypeError):
+        return None
 
 # Funciones CRUD principales
 
@@ -32,9 +40,9 @@ def crear_catequizando(nombre, apellido, fecha_nacimiento, doc_identidad, fecha_
     nuevo_catequizando = {
         "_id": _get_next_id('catequizandos'),
         "nombre": nombre, "apellido": apellido,
-        "fecha_nacimiento": datetime.datetime.fromisoformat(fecha_nacimiento),
+        "fecha_nacimiento": _parse_date_from_form(request.form.get('fecha_nacimiento')),
         "documento_identidad": doc_identidad,
-        "fecha_registro": datetime.datetime.fromisoformat(fecha_registro),
+        "fecha_registro": _parse_date_from_form(request.form.get('fecha_registro')),
         "parroquia_ref": int(id_parroquia) if id_parroquia else None,
         "tiene_bautismo": False, "lugar_bautismo": None, "fecha_bautismo": None,
         "documentos": [], "historial_parroquial": [], "inscripciones": [],
@@ -88,14 +96,14 @@ def eliminar_documento(id_catequizando, id_documento):
 # --- Historial Parroquial ---
 def agregar_a_historial_parroquial(id_catequizando, id_parroquia):
     db = get_db_connection()
-    historial_entry = { "fecha_inicio": datetime.datetime.utcnow(), "fecha_fin": None, "parroquia_ref": int(id_parroquia) }
+    historial_entry = { "fecha_inicio": _parse_date_from_form(request.form.get('fecha_inicio')), "fecha_fin": None, "parroquia_ref": int(id_parroquia) }
     db.catequizandos.update_one({"_id": int(id_catequizando)}, {"$push": {"historial_parroquial": historial_entry}})
     
 def finalizar_historial_actual(id_catequizando):
     db = get_db_connection()
     db.catequizandos.update_one(
         {"_id": int(id_catequizando), "historial_parroquial.fecha_fin": None},
-        {"$set": {"historial_parroquial.$.fecha_fin": datetime.datetime.now(datetime.timezone.utc)}}
+        {"$set": {"historial_parroquial.$.fecha_fin": _parse_date_from_form(request.form.get('fecha_fin'))}}
     )
 
 # --- Inscripciones ---
@@ -103,7 +111,7 @@ def agregar_inscripcion(id_catequizando, observaciones, estado_pago, id_grupo, i
     db = get_db_connection()
     inscripcion = {
         "_id": _get_next_id('inscripciones'), "observaciones": observaciones, "estado_pago": estado_pago,
-        "fecha_inscripcion": datetime.datetime.utcnow(), "grupo_ref": int(id_grupo), "registrado_por_ref": int(id_registrador), "certificado": None
+        "fecha_inscripcion": _parse_date_from_form(request.form.get('fecha_inscripcion')), "grupo_ref": int(id_grupo), "registrado_por_ref": int(id_registrador), "certificado": None
     }
     db.catequizandos.update_one({"_id": int(id_catequizando)}, {"$push": {"inscripciones": inscripcion}})
 def eliminar_inscripcion(id_catequizando, id_inscripcion):
@@ -131,7 +139,7 @@ def eliminar_progreso(id_catequizando, id_progreso):
 def registrar_asistencia(id_catequizando, fecha, estado, id_nivel, id_grupo, id_catequista):
     db = get_db_connection()
     asistencia = {
-        "_id": _get_next_id('asistencias'), "fecha": datetime.datetime.fromisoformat(fecha), "estado": estado,
+        "_id": _get_next_id('asistencias'), "fecha": _parse_date_from_form(request.form.get('fecha')), "estado": estado,
         "nivel_ref": int(id_nivel), "grupo_ref": int(id_grupo), "catequista_ref": int(id_catequista)
     }
     db.catequizandos.update_one({"_id": int(id_catequizando)}, {"$push": {"asistencias": asistencia}})
@@ -145,7 +153,7 @@ def agregar_sesion_especial(id_catequizando, tipo_sesion, observaciones, id_auto
     db = get_db_connection()
     sesion = {
         "_id": _get_next_id('sesiones_especiales'), "tipo_sesion": tipo_sesion, "observaciones": observaciones,
-        "fecha": datetime.datetime.utcnow(), "autorizado_por_ref": int(id_autorizador)
+        "fecha": _parse_date_from_form(request.form.get('fecha')), "autorizado_por_ref": int(id_autorizador)
     }
     db.catequizandos.update_one({"_id": int(id_catequizando)}, {"$push": {"sesiones_especiales": sesion}})
 
@@ -171,7 +179,7 @@ def eliminar_sacramento(id_catequizando, id_sacramento):
     
 def generar_certificado_para_inscripcion(id_catequizando, id_inscripcion, contenido):
     db = get_db_connection()
-    certificado = { "id_certificado": _get_next_id('certificados'), "contenido": contenido, "fecha_emision": datetime.datetime.utcnow() }
+    certificado = { "id_certificado": _get_next_id('certificados'), "contenido": contenido, "fecha_emision": _parse_date_from_form(request.form.get('fecha_emision')) }
     db.catequizandos.update_one(
         {"_id": int(id_catequizando), "inscripciones._id": int(id_inscripcion)},
         {"$set": {"inscripciones.$.certificado": certificado}}

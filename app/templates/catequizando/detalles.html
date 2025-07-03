@@ -69,8 +69,6 @@
             font-weight: 600;
             color: #6a1b9a;
         }
-
-        /* === FORMULARIOS Y ELEMENTOS === */
         form { margin-top: 20px; }
         .form-section { border-top: 1px solid #eee; padding-top: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #7b1fa2; font-size: 14px; }
@@ -130,6 +128,16 @@
             <!-- Formulario con todos los campos del nivel raíz -->
             <label>Nombre:</label> <input name="nombre" value="{{ catequizando.nombre }}">
             <label>Apellido:</label> <input name="apellido" value="{{ catequizando.apellido }}">
+            <label>Parroquia de Registro:</label>
+            <select name="parroquia_ref">
+                <option value="">-- Sin parroquia --</option>
+                {% for parroquia in todas_las_parroquias %}
+                    <option value="{{ parroquia._id }}" 
+                            {% if parroquia._id == catequizando.parroquia_ref %}selected{% endif %}>
+                        {{ parroquia.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
             <label>Fecha Nacimiento:</label> 
             <input type="date" name="fecha_nacimiento" 
                value="{{ catequizando.fecha_nacimiento.strftime('%Y-%m-%d') if catequizando.fecha_nacimiento.strftime else catequizando.fecha_nacimiento }}">
