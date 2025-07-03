@@ -98,13 +98,22 @@
 <body>
   <h1>Actualizar Usuario</h1>
   <form method="post">
-    <input name="nombre" value="{{ usuario.nombre }}" required>
-    <input name="contrasena" value="{{ usuario.contrasena }}" required>
-    <select name="rol">
+    <label for="nombre">Nombre de Usuario</label>
+    <input id="nombre" name="nombre" value="{{ usuario.nombre }}" required>
+    
+    <label for="contrasena">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+    <input id="contrasena" name="contrasena" placeholder="Introduce una nueva contraseña" type="password">
+    
+    <label for="rol">Rol</label>
+    <select id="rol" name="rol">
         <option value="A" {% if usuario.rol == 'A' %}selected{% endif %}>Administrador</option>
         <option value="U" {% if usuario.rol == 'U' %}selected{% endif %}>Usuario</option>
+        <!-- Añade otros roles si los tienes -->
     </select>
-    <button type="submit">Actualizar</button>
+    
+    <button type="submit">Actualizar Usuario</button>
   </form>
+  <br>
+  <a href="{{ url_for('usuario.index') }}">Cancelar</a>
 </body>
 </html>

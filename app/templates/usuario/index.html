@@ -101,6 +101,15 @@
       background-color: #6a1b9a;
       box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
     }
+    .notificaciones {
+      background-color: #722b80;
+      box-shadow: 0 3px 8px rgba(142, 68, 173, 0.6);
+    }
+
+    .notificaciones:hover {
+      background-color: #6a1b9a;
+      box-shadow: 0 4px 14px rgba(106, 27, 154, 0.8);
+    }
 
     .eliminar {
       background-color: #d81b60;
@@ -155,7 +164,8 @@
         <td>{{ 'Admin' if u.rol == 'A' else 'Usuario' }}</td>
         <td class="acciones">
           <a href="{{ url_for('usuario.actualizar', id=u._id) }}" class="editar">Editar</a>
-          <a href="{{ url_for('usuario.eliminar', id=u._id) }}" class="eliminar">Eliminar</a>
+          <a href="{{ url_for('usuario.ver_notificaciones', id=u._id) }}" class="notificaciones">Notificaciones</a>
+          <a href="{{ url_for('usuario.confirmar_eliminar', id=u._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
       {% endfor %}

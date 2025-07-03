@@ -59,6 +59,7 @@ with app.app_context():
     sincronizar_contador("libros")
     sincronizar_contador("tipo_sacramentos")
     sincronizar_contador("catequistas")
+    sincronizar_contador("usuarios")
 
 if __name__ == '__main__':
     app.run(debug=True)

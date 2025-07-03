@@ -96,7 +96,7 @@
 </head>
 <body>
   <h1>¿Estás seguro que deseas eliminar este usuario?</h1>
-  <form method="post">
+  <form method="post" action="{{ url_for('usuario.eliminar', id=usuario._id) }}">
     <button type="submit">Eliminar</button>
     <a href="{{ url_for('usuario.index') }}">Cancelar</a>
   </form>
