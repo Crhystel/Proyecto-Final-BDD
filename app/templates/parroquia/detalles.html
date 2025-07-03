@@ -172,7 +172,7 @@
                 <!-- CORRECCIÓN: Usamos 'nombre_ciclo' que es la clave que sí existe -->
                 <td>{{ grupo.nombre_ciclo | default('No asignado', true) }}</td>
                 
-                <td>{{ grupo.nombre| default('No asignado', true) }}</td>
+                <td>{{ grupo.nombre_nivel| default('No asignado', true) }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -6,7 +6,7 @@ def crear_nivel( nombre_nivel, descripcion, id_libro=None, id_tipo_sacramento=No
     
     nuevo_nivel = {
         "_id": _get_next_id('niveles_catequesis'),
-        "nombre": nombre_nivel,
+        "nombre_nivel": nombre_nivel,
         "descripcion": descripcion
     }
 
@@ -30,7 +30,7 @@ def obtener_niveles():
         {
             "$project": {
                 "_id": 1,
-                "nombre": 1,
+                "nombre_nivel": 1,
                 "descripcion": 1,
                 "nombre_libro": {"$ifNull": ["$libro.titulo", "— Sin libro —"]},
                 "nombre_sacramento": {"$ifNull": ["$tipo_sacramento.nombre", "— Sin sacramento —"]}
@@ -54,7 +54,7 @@ def actualizar_nivel(id_nivel, nombre_nivel, descripcion, id_libro=None, id_tipo
     
     update_doc = {
         "$set": {
-            "nombre": nombre_nivel,
+            "nombre_nivel": nombre_nivel,
             "descripcion": descripcion
         }
     }

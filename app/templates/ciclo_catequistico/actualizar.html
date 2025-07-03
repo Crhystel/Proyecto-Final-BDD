@@ -155,7 +155,7 @@
         <select id="id_nivel" name="id_nivel" required>
           <option value="">-- Seleccione un Nivel --</option>
           {% for nivel in niveles %}
-          <option value="{{ nivel._id }}" {% if ciclo.nivel_ref and nivel._id == ciclo.nivel_ref._id %}selected{% endif %}>
+          <option value="{{ nivel._id }}" {% if ciclo.nivel_ref and nivel._id == ciclo.nivel_ref %}selected{% endif %}>
             {{ nivel.nombre_nivel }}
           </option>
           {% endfor %}

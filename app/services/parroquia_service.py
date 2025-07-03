@@ -202,8 +202,8 @@ def obtener_detalles_completos_parroquia(id_parroquia):
                                 "$ifNull": ["$ciclo_completo.nombre", "Sin ciclo asignado"]
                             },
                         
-                            "nombre": {
-                                "$ifNull": ["$nivel_completo.nombre", "Sin nivel"]
+                            "nombre_nivel": {
+                                "$ifNull": ["$nivel_completo.nombre_nivel", {"$ifNull": ["$nivel_completo.nombre", "Sin nivel"]}]
                             }
                         },
                         "else": "$$REMOVE" 
