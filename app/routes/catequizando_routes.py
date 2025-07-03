@@ -3,16 +3,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import datetime
 
-# --- Importaciones de Servicios ---
-# Servicio principal
-from app.services.catequizando_service import *
-from app.services.parroquia_service import *
+from app.services.parroquia_service import obtener_parroquias
 from app.services.catequista_service import *
+from app.services.catequizando_service import *
 from app.services.nivelcatequesis_service import obtener_niveles
 from app.services.tipo_sacramento_service import obtener_tipos_sacramento
-from app.services.persona_service import obtener_personas # Para padres y padrinos
-from app.services.tipo_documento_service import obtener_tipos_documento # Para documentos
-from app.services.catequizando_service import _parse_date_from_form 
+from app.services.persona_service import obtener_personas
+from app.services.tipo_documento_service import obtener_tipos_documento
 
 catequizando_bp = Blueprint("catequizando", __name__, url_prefix='/catequizandos')
 
@@ -34,16 +31,24 @@ def index():
 @catequizando_bp.route('/insertar', methods=["GET", "POST"])
 def insertar():
     if request.method == "POST":
+        # Recogemos los valores del formulario
         id_nuevo = crear_catequizando(
-            nombre=request.form["nombre"], apellido=request.form["apellido"],
-            fecha_nacimiento=request.form["fecha_nacimiento"], doc_identidad=request.form["documento_identidad"],
-            fecha_registro=request.form["fecha_registro"], id_parroquia=request.form.get("id_parroquia")
+            nombre=request.form.get("nombre"), 
+            apellido=request.form.get("apellido"),
+            doc_identidad=request.form.get("documento_identidad"),
+            fecha_nacimiento=request.form.get("fecha_nacimiento"), 
+            fecha_registro=request.form.get("fecha_registro"), 
+            id_parroquia=request.form.get("id_parroquia"),
+            tiene_bautismo="tiene_bautismo" in request.form,
+            lugar_bautismo=request.form.get("lugar_bautismo"),
+            fecha_bautismo=request.form.get("fecha_bautismo")
         )
         flash("Catequizando creado. Ahora puede gestionar sus detalles.", "success")
         return redirect(url_for("catequizando.detalles", id=id_nuevo))
     
+    
     parroquias = obtener_parroquias()
-    return render_template("catequizando/insertar.html", parroquias=parroquias)
+    return render_template("catequizando/insertar.html", parroquias=parroquias, now=datetime.datetime.utcnow())
 
 @catequizando_bp.route('/eliminar/<int:id>', methods=['POST'])
 def eliminar(id):
@@ -85,21 +90,22 @@ def detalles(id):
 # --- 1. Datos Principales y Ficha ---
 @catequizando_bp.route('/<int:id>/actualizar-principal', methods=['POST'])
 def actualizar_datos_principales(id):
-    parroquia_ref = request.form.get("parroquia_ref")
+    # Ya no se necesita _parse_date_from_form aquí, el servicio lo hace.
+    parroquia_ref_str = request.form.get("parroquia_ref")
     datos = {
-        "nombre": request.form.get("nombre"), "apellido": request.form.get("apellido"),
-        "fecha_nacimiento": _parse_date_from_form(request.form.get("fecha_nacimiento")),
+        "nombre": request.form.get("nombre"), 
+        "apellido": request.form.get("apellido"),
+        "fecha_nacimiento": request.form.get("fecha_nacimiento"),
         "documento_identidad": request.form.get("documento_identidad"),
-        "fecha_registro": _parse_date_from_form(request.form.get("fecha_registro")),
-        "parroquia_ref": int(parroquia_ref) if parroquia_ref else None,
+        "fecha_registro": request.form.get("fecha_registro"),
+        "parroquia_ref": int(parroquia_ref_str) if parroquia_ref_str else None,
         "tiene_bautismo": "tiene_bautismo" in request.form,
         "lugar_bautismo": request.form.get("lugar_bautismo"),
-        "fecha_bautismo": _parse_date_from_form(request.form.get('fecha_bautismo')) if request.form.get("fecha_bautismo") else None
+        "fecha_bautismo": request.form.get('fecha_bautismo')
     }
     actualizar_catequizando_principal(id, datos)
     flash("Datos principales actualizados.", "success")
     return redirect(url_for('catequizando.detalles', id=id))
-
 # --- 2. Documentos ---
 @catequizando_bp.route('/<int:id>/agregar-documento', methods=['POST'])
 def agregar_un_documento(id):
@@ -121,8 +127,11 @@ def eliminar_un_documento(id_catequizando, id_documento):
 @catequizando_bp.route('/<int:id>/agregar-inscripcion', methods=['POST'])
 def agregar_una_inscripcion(id):
     agregar_inscripcion(
-        id_catequizando=id, observaciones=request.form.get("observaciones_inscripcion"),
-        estado_pago=request.form.get("estado_pago"), id_grupo=request.form.get("id_grupo"),
+        id_catequizando=id,
+        fecha_inscripcion=request.form.get("fecha_inscripcion"), # Suponiendo que tienes este campo en el form
+        observaciones=request.form.get("observaciones_inscripcion"),
+        estado_pago=request.form.get("estado_pago"),
+        id_grupo=request.form.get("id_grupo"),
         id_registrador=session.get('usuario_id')
     )
     flash("Inscripción añadida.", "success")
@@ -167,9 +176,12 @@ def eliminar_un_progreso(id_catequizando, id_progreso):
 @catequizando_bp.route('/<int:id>/registrar-asistencia', methods=['POST'])
 def registrar_una_asistencia(id):
     registrar_asistencia(
-        id_catequizando=id, fecha=request.form.get("fecha_asistencia"),
-        estado=request.form.get("estado_asistencia"), id_nivel=request.form.get("id_nivel_asistencia"),
-        id_grupo=request.form.get("id_grupo_asistencia"), id_catequista=session.get('usuario_id') # O un select
+        id_catequizando=id,
+        fecha_str=request.form.get("fecha_asistencia"),
+        estado=request.form.get("estado_asistencia"), 
+        id_nivel=request.form.get("id_nivel_asistencia"),
+        id_grupo=request.form.get("id_grupo_asistencia"), 
+        id_catequista=session.get('usuario_id')
     )
     flash("Asistencia registrada.", "success")
     return redirect(url_for('catequizando.detalles', id=id))
@@ -178,19 +190,20 @@ def registrar_una_asistencia(id):
 @catequizando_bp.route('/<int:id>/agregar-sesion', methods=['POST'])
 def agregar_una_sesion(id):
     agregar_sesion_especial(
-        id_catequizando=id, tipo_sesion=request.form.get("tipo_sesion"),
+        id_catequizando=id, 
+        tipo_sesion=request.form.get("tipo_sesion"),
         observaciones=request.form.get("observaciones_sesion"),
         id_autorizador=session.get('usuario_id')
     )
     flash("Sesión especial añadida.", "success")
     return redirect(url_for('catequizando.detalles', id=id))
-
 # --- 7. Sacramentos ---
 @catequizando_bp.route('/<int:id>/registrar-sacramento', methods=['POST'])
 def registrar_un_sacramento(id):
+    # CORREGIDO: Se pasa un diccionario limpio al servicio
     datos_sacramento = {
         "lugar": request.form.get("lugar_sacramento"),
-        "fecha_sacramento":_parse_date_from_form(request.form.get("fecha_sacramento")),
+        "fecha_sacramento": request.form.get("fecha_sacramento"), # Se pasa como string
         "observaciones": request.form.get("observaciones_sacramento"),
         "tipo_sacramento_ref": request.form.get("id_tipo_sacramento"),
         "padre_ref": request.form.get("id_padre"),
@@ -201,6 +214,7 @@ def registrar_un_sacramento(id):
     registrar_sacramento(id, datos_sacramento)
     flash("Sacramento registrado.", "success")
     return redirect(url_for('catequizando.detalles', id=id))
+
 @catequizando_bp.route('/<int:id_catequizando>/eliminar-sacramento/<int:id_sacramento>', methods=['POST'])
 def eliminar_un_sacramento(id_catequizando, id_sacramento):
     eliminar_sacramento(id_catequizando, id_sacramento)

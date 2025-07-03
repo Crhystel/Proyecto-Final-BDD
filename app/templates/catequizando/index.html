@@ -141,30 +141,38 @@
   <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Parroquia Actual</th>
+        <!-- CABECERAS ACTUALIZADAS -->
+        <th>Nombre Completo</th>
+        <th>Documento</th>
+        <th>Fecha Nac.</th>
+        <th>Parroquia</th>
+        <th>Bautizado</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       {% for c in catequizandos %}
       <tr>
-        <td>{{ c._id }}</td>
-        <td>{{ c.nombre }}</td>
-        <td>{{ c.apellido }}</td>
+        <!-- CELDAS ACTUALIZADAS -->
+        <td>{{ c.nombre }} {{ c.apellido }}</td>
+        <td>{{ c.documento_identidad or '—' }}</td>
+        <td>{{ c.fecha_nacimiento.strftime('%d-%m-%Y') if c.fecha_nacimiento else '—' }}</td>
         <td>{{ c.nombre_parroquia or '—' }}</td>
+        <td>
+          {% if c.tiene_bautismo %}
+            <span class="status-si">Sí</span>
+          {% else %}
+            <span class="status-no">No</span>
+          {% endif %}
+        </td>
         <td class="acciones">
-          <!-- El botón principal ahora es "Gestionar" que lleva a la página de detalles -->
-          <a href="{{ url_for('catequizando.detalles', id=c._id) }}" style="background-color: #4CAF50;">Gestionar</a>
-          <!-- El "Editar" ahora es para los datos principales, una acción menos común -->
-          <a href="{{ url_for('catequizando.confirmar_eliminar', id=c._id) }}">Eliminar</a>
+          <a href="{{ url_for('catequizando.detalles', id=c._id) }}" class="btn-gestionar">Gestionar</a>
+          <a href="{{ url_for('catequizando.confirmar_eliminar', id=c._id) }}" class="btn-eliminar">Eliminar</a>
         </td>
       </tr>
       {% else %}
       <tr>
-        <td colspan="5">No hay catequizandos registrados.</td>
+        <td colspan="6" style="text-align:center;">No hay catequizandos registrados.</td>
       </tr>
       {% endfor %}
     </tbody>
