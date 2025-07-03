@@ -134,11 +134,9 @@
   </style>
 </head>
 <body>
-  <h1>Lista de Catequizandos</h1>
-
-  <!-- Botones -->
+ <h1>Lista de Catequizandos</h1>
   <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('catequizando.insertar') }}" class="boton-insertar">+ Insertar nuevo catequizando</a>
+  <a href="{{ url_for('catequizando.insertar') }}" class="boton-insertar">+ Nuevo Catequizando</a>
 
   <table>
     <thead>
@@ -146,11 +144,7 @@
         <th>ID</th>
         <th>Nombre</th>
         <th>Apellido</th>
-        <th>Fecha Nac.</th>
-        <th>Doc. Identidad</th>
-        <th>Fecha Registro</th>
-        <th>Bautizado</th>
-        <th>Parroquia</th>
+        <th>Parroquia Actual</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -160,15 +154,17 @@
         <td>{{ c._id }}</td>
         <td>{{ c.nombre }}</td>
         <td>{{ c.apellido }}</td>
-        <td>{{ c.fecha_nacimiento }}</td>
-        <td>{{ c.documento_identidad }}</td>
-        <td>{{ c.fecha_registro }}</td>
-        <td>{{ 'Sí' if c.bautizado == 'S' else 'No' }}</td>
         <td>{{ c.nombre_parroquia or '—' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('catequizando.actualizar', id=c._id) }}">Editar</a>
-          <a href="{{ url_for('catequizando.eliminar', id=c._id) }}">Eliminar</a>
+          <!-- El botón principal ahora es "Gestionar" que lleva a la página de detalles -->
+          <a href="{{ url_for('catequizando.detalles', id=c._id) }}" style="background-color: #4CAF50;">Gestionar</a>
+          <!-- El "Editar" ahora es para los datos principales, una acción menos común -->
+          <a href="{{ url_for('catequizando.confirmar_eliminar', id=c._id) }}">Eliminar</a>
         </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5">No hay catequizandos registrados.</td>
       </tr>
       {% endfor %}
     </tbody>

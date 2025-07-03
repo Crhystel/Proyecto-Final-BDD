@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Catequizandos</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Poppins', sans-serif;
+            background: 
+                linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 245, 250, 0.95)),
+                url('https://wallpapers.com/images/featured/pink-aesthetic-tumblr-laptop-yb2mef7h48w9j760.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #4a148c;
+            min-height: 100vh;
+        }
+
+        /* === CONTENEDOR Y TÍTULOS === */
+        .container { max-width: 900px; margin: auto; }
+        h1 {
+            color: #6a1b9a;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #8e44ad;
+            border-bottom: 2px solid #f3e5f5;
+            padding-bottom: 10px;
+            font-size: 22px;
+        }
+        h3 {
+            margin-top: 30px;
+            color: #7b1fa2;
+            font-size: 18px;
+        }
+
+        /* === TARJETA DE SECCIÓN === */
+        .section-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        /* === TABLAS === */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            vertical-align: middle;
+        }
+        thead th {
+            background-color: #f9f2ff;
+            font-weight: 600;
+            color: #6a1b9a;
+        }
+
+        /* === FORMULARIOS Y ELEMENTOS === */
+        form { margin-top: 20px; }
+        .form-section { border-top: 1px solid #eee; padding-top: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #7b1fa2; font-size: 14px; }
+        input[type="text"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        
+        /* === BOTONES === */
+        .boton-principal, button[type="submit"] {
+            display: inline-block;
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .boton-principal:hover, button[type="submit"]:hover { background-color: #6a1b9a; }
+        
+        .boton-regreso {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 18px;
+            background-color: #bab3bd;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        .delete-btn:hover { background-color: #c0392b; }
+  </style>
+</head>
+<body>
+ <div class="container">
+    <h1>Gestionar a: {{ catequizando.nombre }} {{ catequizando.apellido }}</h1>
+    <a href="{{ url_for('catequizando.index') }}">← Volver a la lista de catequizandos</a>
+    <hr>
+
+    <!-- Sección de Datos Principales -->
+    <div class="section-card">
+        <h2>Datos Principales y Ficha</h2>
+        <form method="post" action="{{ url_for('catequizando.actualizar_datos_principales', id=catequizando._id) }}">
+            <!-- Formulario con todos los campos del nivel raíz -->
+            <label>Nombre:</label> <input name="nombre" value="{{ catequizando.nombre }}">
+            <label>Apellido:</label> <input name="apellido" value="{{ catequizando.apellido }}">
+            <label>Fecha Nacimiento:</label> 
+            <input type="date" name="fecha_nacimiento" 
+               value="{{ catequizando.fecha_nacimiento.strftime('%Y-%m-%d') if catequizando.fecha_nacimiento.strftime else catequizando.fecha_nacimiento }}">
+            <hr>
+            <h4>Ficha de Bautismo</h4>
+            <label><input type="checkbox" name="tiene_bautismo" {% if catequizando.tiene_bautismo %}checked{% endif %}> ¿Está bautizado?</label>
+            <label>Lugar de Bautismo:</label> <input name="lugar_bautismo" value="{{ catequizando.lugar_bautismo or '' }}">
+            <label>Fecha de Bautismo:</label>
+            <input type="date" name="fecha_bautismo" 
+               value="{{ catequizando.fecha_bautismo.strftime('%Y-%m-%d') if catequizando.fecha_bautismo and catequizando.fecha_bautismo.strftime else (catequizando.fecha_bautismo or '') }}">
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <!-- Sección de Inscripciones -->
+    <div class="section-card">
+        <h2>Inscripciones</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Fecha</th><th>Grupo</th><th>Estado</th><th>Certificado</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for inscripcion in catequizando.inscripciones or [] %}
+                <tr>
+                    <td>{{ inscripcion._id }}</td>
+                    <td>{{ inscripcion.fecha_inscripcion}}</td>
+                    <td>{{ inscripcion.grupo_ref }}</td>
+                    <td>{{ 'Pagado' if inscripcion.estado_pago == 'P' else 'Debe' }}</td>
+                    <td>
+                        {% if inscripcion.certificado %}
+                            <a href="#">Ver #{{ inscripcion.certificado.id_certificado }}</a>
+                            <form method="post" action="{{ url_for('catequizando.eliminar_un_certificado', id_catequizando=catequizando._id, id_inscripcion=inscripcion._id) }}">
+                                <button type="submit">X</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('catequizando.generar_un_certificado', id_catequizando=catequizando._id, id_inscripcion=inscripcion._id) }}">
+                                <input type="hidden" name="contenido_certificado" value="Certificado para {{ catequizando.nombre }}">
+                                <button type="submit">Generar</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{{ url_for('catequizando.eliminar_una_inscripcion', id_catequizando=catequizando._id, id_inscripcion=inscripcion._id) }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <h3>Añadir Nueva Inscripción</h3>
+        <form method="post" action="{{ url_for('catequizando.agregar_una_inscripcion', id=catequizando._id) }}">
+            <select name="id_grupo" required>
+                <option value="">-- Seleccione un grupo --</option>
+                {% for grupo in todos_los_grupos %}<option value="{{ grupo.id_grupo_catequesis }}">{{ grupo.nombre_grupo }}</option>{% endfor %}
+            </select>
+            <select name="estado_pago"><option value="P">Pagado</option><option value="D">Debe</option></select>
+            <textarea name="observaciones_inscripcion" placeholder="Observaciones..."></textarea>
+            <button type="submit">Inscribir</button>
+        </form>
+    </div>
+    <div class="section-card">
+        <h2>Progresos Académicos</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Nivel</th><th>Aprobado</th><th>Fecha Fin</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for prog in catequizando.progresos or [] %}
+                <tr>
+                    <td>{{ prog._id }}</td><td>{{ prog.nivel_ref }}</td><td>{{ 'Sí' if prog.aprobado else 'No' }}</td><td>{{ prog.fecha_fin if prog.fecha_fin else 'En curso' }}</td>
+                    <td><form method="post" action="{{ url_for('catequizando.eliminar_un_progreso', id_catequizando=catequizando._id, id_progreso=prog._id) }}"><button type="submit" class="delete-btn">Eliminar</button></form></td>
+                </tr>
+                {% else %}<tr><td colspan="5">No hay progresos registrados.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <form method="post" action="{{ url_for('catequizando.agregar_un_progreso', id=catequizando._id) }}">
+            <h3>Añadir Progreso</h3>
+            <select name="id_nivel_progreso" required><option value="">-- Nivel --</option>{% for nivel in todos_los_niveles %}<option value="{{ nivel._id }}">{{ nivel.nombre_nivel }}</option>{% endfor %}</select>
+            <select name="id_catequista_aprobador" required><option value="">-- Aprobado por --</option>{% for cat in todos_los_catequistas %}<option value="{{ cat._id }}">{{ cat.nombre }} {{ cat.apellido }}</option>{% endfor %}</select>
+            <button type="submit">Añadir</button>
+        </form>
+    </div>
+    
+    <!-- 5. Sección de Asistencias -->
+    <div class="section-card">
+        <h2>Asistencias</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Fecha</th><th>Estado</th><th>Grupo</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for asis in catequizando.asistencias or [] %}
+                <tr>
+                    <td>{{ asis._id }}</td><td>{{ asis.fecha }}</td><td>{{ asis.estado }}</td><td>{{ asis.grupo_ref }}</td>
+                    <td><form method="post" action="{{ url_for('catequizando.eliminar_una_asistencia', id_catequizando=catequizando._id, id_asistencia=asis._id) }}"><button type="submit" class="delete-btn">Eliminar</button></form></td>
+                </tr>
+                {% else %}<tr><td colspan="5">No hay asistencias registradas.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <form method="post" action="{{ url_for('catequizando.registrar_una_asistencia', id=catequizando._id) }}">
+            <h3>Registrar Asistencia</h3>
+            <input type="date" name="fecha_asistencia" required>
+            <select name="estado_asistencia"><option value="A">Asistió</option><option value="F">Faltó</option><option value="J">Justificado</option></select>
+            <select name="id_grupo_asistencia" required><option value="">-- Grupo --</option>{% for grupo in todos_los_grupos %}<option value="{{ grupo.id_grupo_catequesis }}">{{ grupo.nombre_grupo }}</option>{% endfor %}</select>
+            <select name="id_nivel_asistencia" required><option value="">-- Nivel --</option>{% for nivel in todos_los_niveles %}<option value="{{ nivel._id }}">{{ nivel.nombre_nivel }}</option>{% endfor %}</select>
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
+
+    <!-- 6. Sección de Sesiones Especiales -->
+    <div class="section-card">
+        <h2>Sesiones Especiales</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Fecha</th><th>Tipo</th><th>Observaciones</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for sesion in catequizando.sesiones_especiales or [] %}
+                <tr>
+                    <td>{{ sesion._id }}</td><td>{{ sesion.fecha}}</td><td>{{ sesion.tipo_sesion }}</td><td>{{ sesion.observaciones }}</td>
+                    <td><form method="post" action="{{ url_for('catequizando.eliminar_una_sesion', id_catequizando=catequizando._id, id_sesion=sesion._id) }}"><button type="submit" class="delete-btn">Eliminar</button></form></td>
+                </tr>
+                {% else %}<tr><td colspan="5">No hay sesiones especiales.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <form method="post" action="{{ url_for('catequizando.agregar_una_sesion', id=catequizando._id) }}">
+            <h3>Añadir Sesión Especial</h3>
+            <input type="text" name="tipo_sesion" placeholder="Tipo de sesión" required>
+            <textarea name="observaciones_sesion" placeholder="Observaciones de la sesión..."></textarea>
+            <button type="submit">Añadir Sesión</button>
+        </form>
+    </div>
+
+    <!-- 7. Sección de Sacramentos -->
+    <div class="section-card">
+        <h2>Sacramentos Recibidos</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Sacramento</th><th>Fecha</th><th>Lugar</th><th>Acciones</th></tr></thead>
+            <tbody>
+                {% for sac in catequizando.sacramentos or [] %}
+                <tr>
+                    <td>{{ sac._id }}</td><td>{{ sac.tipo_sacramento_ref }}</td><td>{{ sac.fecha_sacramento }}</td><td>{{ sac.lugar }}</td>
+                    <td><form method="post" action="{{ url_for('catequizando.eliminar_un_sacramento', id_catequizando=catequizando._id, id_sacramento=sac._id) }}"><button type="submit" class="delete-btn">Eliminar</button></form></td>
+                </tr>
+                {% else %}<tr><td colspan="5">No hay sacramentos registrados.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+        <form method="post" action="{{ url_for('catequizando.registrar_un_sacramento', id=catequizando._id) }}">
+            <h3>Registrar Sacramento</h3>
+            <select name="id_tipo_sacramento" required><option value="">-- Sacramento --</option>{% for s in todos_los_sacramentos %}<option value="{{ s._id }}">{{ s.nombre }}</option>{% endfor %}</select>
+            <input type="text" name="lugar_sacramento" placeholder="Lugar de la celebración" required>
+            <input type="date" name="fecha_sacramento" required>
+            <textarea name="observaciones_sacramento" placeholder="Observaciones..."></textarea>
+            <select name="id_padre"><option value="">-- Padre --</option>{% for p in todas_las_personas %}{% if p.tipo_persona == 'P' %}<option value="{{p._id}}">{{p.nombre}} {{p.apellido}}</option>{% endif %}{% endfor %}</select>
+            <select name="id_madre"><option value="">-- Madre --</option>{% for p in todas_las_personas %}{% if p.tipo_persona == 'M' %}<option value="{{p._id}}">{{p.nombre}} {{p.apellido}}</option>{% endif %}{% endfor %}</select>
+            <select name="id_padrino"><option value="">-- Padrino --</option>{% for p in todas_las_personas %}{% if p.tipo_persona == 'D' %}<option value="{{p._id}}">{{p.nombre}} {{p.apellido}}</option>{% endif %}{% endfor %}</select>
+            <select name="id_madrina"><option value="">-- Madrina --</option>{% for p in todas_las_personas %}{% if p.tipo_persona == 'N' %}<option value="{{p._id}}">{{p.nombre}} {{p.apellido}}</option>{% endif %}{% endfor %}</select>
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
+    
+    <!-- 8. Sección de Historial Parroquial (Solo visualización) -->
+    <div class="section-card">
+        <h2>Historial Parroquial</h2>
+        <table>
+            <thead><tr><th>Parroquia</th><th>Fecha de Inicio</th><th>Fecha de Fin</th></tr></thead>
+            <tbody>
+                {% for hist in catequizando.historial_parroquial or [] %}
+                <tr>
+                    <td>{{ hist.parroquia_ref }}</td>
+                    <td>{{ hist.fecha_inicio }}</td>
+                    <td>{{ hist.fecha_fin if hist.fecha_fin else 'Actual' }}</td>
+                </tr>
+                {% else %}<tr><td colspan="3">No hay historial.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

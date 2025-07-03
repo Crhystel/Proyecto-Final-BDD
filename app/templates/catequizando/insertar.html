@@ -104,38 +104,32 @@
   </style>
 </head>
 <body>
-  <h1>Registrar Catequizando</h1>
-
+  <h1>Registrar Nuevo Catequizando</h1>
   <form method="post">
     <label for="nombre">Nombre:</label>
-    <input id="nombre" name="nombre" placeholder="Nombre" required />
+    <input id="nombre" name="nombre" placeholder="Nombre del catequizando" required />
 
     <label for="apellido">Apellido:</label>
-    <input id="apellido" name="apellido" placeholder="Apellido" required />
+    <input id="apellido" name="apellido" placeholder="Apellido del catequizando" required />
 
     <label for="fecha_nacimiento">Fecha de nacimiento:</label>
     <input id="fecha_nacimiento" name="fecha_nacimiento" type="date" required />
 
     <label for="documento_identidad">Documento de identidad:</label>
-    <input id="documento_identidad" name="documento_identidad" placeholder="Documento de identidad" required />
+    <input id="documento_identidad" name="documento_identidad" placeholder="Cédula o pasaporte" required />
 
     <label for="fecha_registro">Fecha de registro:</label>
     <input id="fecha_registro" name="fecha_registro" type="date" required />
 
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <input id="bautizado" name="bautizado" type="checkbox" style="width: auto;">
-        <label for="bautizado" style="margin-bottom: 0;">¿Está bautizado?</label>
-    </div>
-
-    <label for="id_parroquia">Parroquia:</label>
+    <label for="id_parroquia">Parroquia a la que pertenece:</label>
     <select id="id_parroquia" name="id_parroquia" required>
-      <option value="">-- Seleccione una parroquia --</option>
+      <option value="">Seleccione una parroquia</option>
       {% for parroquia in parroquias %}
         <option value="{{ parroquia._id }}">{{ parroquia.nombre }}</option>
       {% endfor %}
     </select>
 
-    <button type="submit">Guardar</button>
+    <button type="submit">Crear y Continuar a Detalles</button>
   </form>
 </body>
 </html>
