@@ -148,3 +148,58 @@ def obtener_grupos_de_parroquia(id_parroquia):
     if parroquia and 'grupos_catequesis' in parroquia:
         return parroquia['grupos_catequesis']
     return []
+
+
+def obtener_detalles_completos_parroquia(id_parroquia):
+    db = get_db_connection()
+    try:
+        id_num = int(id_parroquia)
+    except (ValueError, TypeError):
+        return None
+
+    pipeline = [
+        {"$match": {"_id": id_num}},
+        {"$unwind": {"path": "$grupos_catequesis", "preserveNullAndEmptyArrays": True}},
+        {"$lookup": {
+            "from": "ciclos_catequisticos",
+            "localField": "grupos_catequesis.ciclo_ref",
+            "foreignField": "_id",
+            "as": "ciclo_completo"
+        }},
+        {"$unwind": {"path": "$ciclo_completo", "preserveNullAndEmptyArrays": True}},
+        {"$lookup": {
+            "from": "niveles_catequesis",
+            "localField": "ciclo_completo.nivel_ref",
+            "foreignField": "_id",
+            "as": "nivel_completo"
+        }},
+        {"$unwind": {"path": "$nivel_completo", "preserveNullAndEmptyArrays": True}},
+        
+        {"$group": {
+            "_id": "$_id",
+            "nombre": {"$first": "$nombre"},
+            "direccion": {"$first": "$direccion"},
+            "ciudad": {"$first": "$ciudad"},
+            "telefono": {"$first": "$telefono"},
+            "correo_electronico": {"$first": "$correo_electronico"},
+            "parroquia_principal": {"$first": "$parroquia_principal"},
+            "grupos_catequesis": {
+                "$push": {
+                    "$cond": {
+                        "if": "$grupos_catequesis.id_grupo_catequesis",
+                        "then": {
+                            "id_grupo_catequesis": "$grupos_catequesis.id_grupo_catequesis",
+                            "nombre_grupo": "$grupos_catequesis.nombre_grupo",
+                            "ciclo_info": {"$ifNull": ["$ciclo_completo", None]},
+                            "nivel_info": {"$ifNull": ["$nivel_completo", None]}
+                        },
+                        "else": "$$REMOVE" 
+                    }
+                }
+            }
+        }}
+    ]
+
+    resultado = list(db.parroquias.aggregate(pipeline))
+        
+    return resultado[0] if resultado else None

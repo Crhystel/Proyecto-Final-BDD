@@ -75,7 +75,7 @@ def eliminar_ciclo(id_ciclo):
     db = get_db_connection()
     try:
         id_num = int(id_ciclo)
-        resultado = db.ciclo_catequisticos.delete_one({"_id": id_num})
+        resultado = db.ciclos_catequisticos.delete_one({"_id": id_num})
         return resultado.deleted_count > 0
     except (ValueError, TypeError):
         return False

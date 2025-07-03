@@ -84,17 +84,18 @@ def confirmar_eliminar(id):
         return redirect(url_for('parroquia.index'))
     return render_template('parroquia/eliminar.html', parroquia=parroquia)
 
-@parroquia_bp.route('/<string:id>/detalles')
+@parroquia_bp.route('/<int:id>/detalles')
 def detalles_parroquia(id):
-    parroquia = obtener_parroquia_por_id(id)
+    parroquia = obtener_detalles_completos_parroquia(id)
+    
     if not parroquia:
         flash("Parroquia no encontrada.", "danger")
         return redirect(url_for('parroquia.index'))
+    
     if 'parroquia_principal' not in parroquia:
         flash("Las parroquias principales no gestionan grupos directamente", "info")
         return redirect(url_for('parroquia.index'))
-    grupos = parroquia.get('grupos_catequesis', [])
-    return render_template('parroquia/detalles.html', parroquia=parroquia, grupos=grupos)
+    return render_template('parroquia/detalles.html', parroquia=parroquia)
 
 @parroquia_bp.route('/<string:id>/agregar_grupo', methods=['GET', 'POST'])
 def agregar_grupo(id):

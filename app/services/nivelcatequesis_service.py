@@ -27,7 +27,7 @@ def crear_nivel(orden, nombre_nivel, descripcion, id_libro=None, id_tipo_sacrame
 def obtener_niveles():
     db = get_db_connection()
   
-    cursor = db.nivel_catequesis.find(
+    cursor = db.niveles_catequesis.find(
         {}, 
         {
             "libro.autor": 0, "libro.editorial": 0, "libro.anio_edicion": 0,

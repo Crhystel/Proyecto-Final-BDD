@@ -143,35 +143,51 @@
   </style>
 </head>
 <body>
-<h1>Detalles de: {{ parroquia.nombre }}</h1>
-<p><strong>Dirección:</strong> {{ parroquia.direccion }}, {{ parroquia.ciudad }}</p>
+  <div class="container">
+        <h1>{{ parroquia.nombre }}</h1>
+        <div class="info-parroquia">
+            <p><strong>Dirección:</strong> {{ parroquia.direccion }}, {{ parroquia.ciudad }}</p>
+            <p><strong>Contacto:</strong> {{ parroquia.telefono or 'N/A' }} | {{ parroquia.correo_electronico or 'N/A' }}</p>
+            <p><strong>Depende de:</strong> {{ parroquia.parroquia_principal.nombre if parroquia.parroquia_principal else 'N/A' }}</p>
+        </div>
 
-<hr>
+        <h2>Grupos de Catequesis</h2>
+        
+        {% if parroquia.get('grupos_catequesis') %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre del Grupo</th>
+                        <th>Ciclo Catequístico</th>
+                        <th>Nivel</th>
+                        <th>Libro</th>
+                        <th>Sacramento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grupo in parroquia.grupos_catequesis %}
+                    <tr>
+                        <td><strong>{{ grupo.nombre_grupo }}</strong></td>
+                        <td>{{ grupo.ciclo_info.nombre | default('No asignado', true) }}</td>
+                        <td>
+                            <strong>{{ grupo.nivel_info.nombre_nivel | default('No asignado', true) }}</strong><br>
+                            <small>{{ grupo.nivel_info.descripcion | default('', true) }}</small>
+                        </td>
+                        <td>{{ grupo.nivel_info.libro.titulo | default('Sin libro', true) }}</td>
+                        <td>{{ grupo.nivel_info.tipo_sacramento.nombre | default('N/A', true) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="no-grupos">
+                <p>Esta parroquia aún no tiene grupos de catequesis registrados.</p>
+            </div>
+        {% endif %}
 
-<h2>Grupos de Catequesis</h2>
-<a href="{{ url_for('parroquia.index') }}" class="boton-regreso">← Volver a la lista</a>
-<a href="{{ url_for('parroquia.agregar_grupo', id=parroquia._id) }}" class="boton-insertar">+ Añadir Nuevo Grupo</a>
-
-
-<table>
-    <tr>
-      <th>ID Grupo</th>
-      <th>Nombre del Grupo</th>
-    </tr>
-  <tbody>
-    {% for grupo in grupos %}
-    <tr>
-      <td>{{ grupo.id_grupo_catequesis }}</td>
-      <td>{{ grupo.nombre_grupo }}</td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="2">No hay grupos registrados para esta parroquia.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+        <a href="{{ url_for('parroquia.agregar_grupo', id=parroquia._id) }}" class="boton">+ Añadir Nuevo Grupo</a>
+        <a href="{{ url_for('parroquia.index') }}" class="boton" style="background-color: #7f8c8d;">Volver a la Lista</a>
+    </div>
 
 </body>
 </html>

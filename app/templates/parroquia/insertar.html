@@ -96,51 +96,60 @@
   </style>
 </head>
 <body>
-  <h1>Insertar Parroquia</h1>
+   <h1>Crear Nueva Parroquia</h1>
   <form method="post">
-    <input name="nombre" placeholder="Nombre" required />
-    <input name="direccion" placeholder="Dirección" required />
-    <input name="ciudad" placeholder="Ciudad" required />
-    <input name="telefono" placeholder="Teléfono" />
-    <input name="correo_electronico" placeholder="Correo electrónico" />
-    <label for="id_parroquia_principal" style="font-weight: bold; display: block; margin-top: 10px; margin-bottom: 5px;">
-      ¿A qué Parroquia Principal pertenece?
-    </label>
+    <label for="nombre">Nombre de la Parroquia</label>
+    <input id="nombre" name="nombre" placeholder="Ej: San Juan Bosco" required />
+    
+    <label for="direccion">Dirección</label>
+    <input id="direccion" name="direccion" placeholder="Ej: Av. Principal 123" required />
+    
+    <label for="ciudad">Ciudad</label>
+    <input id="ciudad" name="ciudad" placeholder="Ej: Quito" required />
+    
+    <label for="telefono">Teléfono (Opcional)</label>
+    <input id="telefono" name="telefono" placeholder="Ej: 022555123" />
+    
+    <label for="correo_electronico">Correo Electrónico (Opcional)</label>
+    <input id="correo_electronico" name="correo_electronico" type="email" placeholder="Ej: contacto@sanjuan.com" />
+    
+    <hr style="margin: 25px 0;">
+    
+    <label for="id_parroquia_principal">¿Depende de una Parroquia Principal?</label>
     <select id="id_parroquia_principal" name="id_parroquia_principal" onchange="toggleGrupoFields()">
-      <option value="">Esta es una parroquia Principal</option>
+      <option value="">No, esta es una Parroquia Principal</option>
       {% for pp in parroquias_principales %}
-        <option value="{{ pp._id}}">{{ pp.nombre }}</option>
+        <option value="{{ pp._id }}">{{ pp.nombre }}</option>
       {% endfor %}
     </select>
-    <div id="campos_grupo" style="display: none; border-left: 3px solid #8e44ad;padding-left: 15px; margin-top: 20px;">
-      <h4 style="color: #6a1b9a;">Grupo de Catequesis</h4>
+    
+    <div id="campos_grupo" class="grupo-opcional">
+      <h4 style="color: #6a1b9a;">Crear Primer Grupo (Opcional)</h4>
       <label for="nombre_grupo">Nombre del Grupo</label>
-      <input id="nombre_grupo" name="nombre_grupo" placeholder="Ej: Grupo A - Sábados Mañana">
-      <label for="id_ciclo">Ciclo Catequístico</label>
+      <input id="nombre_grupo" name="nombre_grupo" placeholder="Ej: Grupo Sábados Mañana">
+      
+      <label for="id_ciclo">Asignar a un Ciclo Catequístico</label>
       <select id="id_ciclo" name="id_ciclo">
-        <option value="">Seleccione un ciclo</option>
+        <option value="">-- Ninguno por ahora --</option>
         {% for ciclo in ciclos %}
-          <option value="{{ciclo._id}}">{{ciclo.nombre}}</option>
+          <option value="{{ ciclo._id }}">{{ ciclo.nombre }}</option>
         {% endfor %}
       </select>
     </div>
 
-    <button type="submit">Guardar</button>
+    <button type="submit">Guardar Parroquia</button>
+    <a href="{{ url_for('parroquia.index') }}" class="cancelar">Cancelar</a>
   </form>
+  
   <script>
-    function toggleGrupoFields(){
-      const parroquiaSelect=document.getElementById('id_parroquia_principal');
-      const camposGrupo=document.getElementById("campos_grupo");
-      const nombreGrupoInput=document.getElementById("nombre_grupo");
-      const cicloSelect=document.getElementById("id_ciclo");
-      if(parroquiaSelect.value !== ""){
-        camposGrupo.style.display='block';
-        nombreGrupoInput.required=true;
-        cicloSelect.required=true;
-      }else{
-        camposGrupo.style.display="none";
-        nombreGrupoInput.required="false";
-        cicloSelect.required=false;
+    function toggleGrupoFields() {
+      const parroquiaSelect = document.getElementById('id_parroquia_principal');
+      const camposGrupo = document.getElementById("campos_grupo");
+      
+      if (parroquiaSelect.value !== "") {
+        camposGrupo.style.display = 'block';
+      } else {
+        camposGrupo.style.display = "none";
       }
     }
   </script>

@@ -62,8 +62,11 @@ def confirmar_eliminar(id):
         return redirect(url_for("nivel.index"))
     return render_template('nivel/eliminar.html',nivel=nivel)
 
-@nivel_bp.route('eliminar/<tring:id>', methods=['POST'])
+@nivel_bp.route('/eliminar/<int:id>', methods=['POST']) 
 def eliminar(id):
-    eliminar_nivel(id)
-    flash("Nivel eliminado", "info")
+    exito = eliminar_nivel(id)
+    if exito:
+        flash("Nivel eliminado", "info")
+    else:
+        flash("Error al eliminar el nivel.", "danger")
     return redirect(url_for('nivel.index'))
