@@ -7,7 +7,6 @@ def crear_tipo_sacramento(nombre):
     nuevo_tipo_sacramento = {
         "_id": _get_next_id('tipo_sacramentos'),
         "nombre": nombre
-        # Puedes añadir más campos en el futuro si es necesario, como 'descripcion'.
     }
     
     try:
@@ -19,7 +18,7 @@ def crear_tipo_sacramento(nombre):
     
 def obtener_tipos_sacramento():
     db = get_db_connection()
-    return list(db.tipo_sacramentos.find().sort("nombre", 1))
+    return list(db.tipo_sacramentos.find().sort("_id", 1))
 
 def obtener_tipo_sacramento_por_id(id_tipo_sacramento):
     db = get_db_connection()

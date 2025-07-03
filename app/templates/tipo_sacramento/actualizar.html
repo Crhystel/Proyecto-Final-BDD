@@ -98,8 +98,12 @@
 <body>
   <h1>Actualizar Tipo de Sacramento</h1>
   <form method="post">
-    <input name="nombre" value="{{ tipo.nombre }}" required>
-    <button type="submit">Actualizar</button>
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" value="{{ tipo.nombre }}" required>
+    </div>
+    <button type="submit">Guardar Cambios</button>
+    <a href="{{ url_for('tiposacramento.index') }}" class="cancelar">Cancelar</a>
   </form>
 </body>
 </html>

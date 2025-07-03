@@ -135,10 +135,9 @@
 </head>
 <body>
   <h1>Tipos de Sacramento</h1>
-  <div style="text-align:center;">
-    <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
-    <a  href="{{ url_for('tipo_sacramento.insertar') }}" class="boton-insertar">+ Insertar nuevo Sacramento</a>
-
+  <div>
+    <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
+    <a href="{{ url_for('tiposacramento.insertar') }}" class="boton-insertar">+ Nuevo Tipo de Sacramento</a>
   </div>
   <table>
     <thead>
@@ -151,13 +150,15 @@
     <tbody>
       {% for t in tipos %}
       <tr>
-        <td>{{ t.id_sacramento_tipo }}</td>
+        <td>{{ t._id }}</td>
         <td>{{ t.nombre }}</td>
         <td class="acciones">
-          <a href="{{ url_for('tipo_sacramento.actualizar', id=t.id_sacramento_tipo) }}" class="editar">Editar</a>
-          <a href="{{ url_for('tipo_sacramento.eliminar', id=t.id_sacramento_tipo) }}" class="eliminar">Eliminar</a>
+          <a href="{{ url_for('tiposacramento.actualizar', id=t._id) }}" class="editar">Editar</a>
+          <a href="{{ url_for('tiposacramento.confirmar_eliminar', id=t._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
+      {% else %}
+        <tr><td colspan="3" style="text-align:center;">No hay tipos de sacramento registrados.</td></tr>
       {% endfor %}
     </tbody>
   </table>

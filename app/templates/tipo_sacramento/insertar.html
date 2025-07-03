@@ -97,8 +97,12 @@
 <body>
   <h1>Registrar Tipo de Sacramento</h1>
   <form method="post">
-    <input name="nombre" placeholder="Nombre del tipo de sacramento" required>
+    <div>
+      <label for="nombre">Nombre del Sacramento</label>
+      <input id="nombre" name="nombre" placeholder="Ej: Matrimonio" required>
+    </div>
     <button type="submit">Guardar</button>
+    <a href="{{ url_for('tiposacramento.index') }}" class="cancelar">Cancelar</a>
   </form>
 </body>
 </html>
