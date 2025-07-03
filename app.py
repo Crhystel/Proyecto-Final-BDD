@@ -10,6 +10,8 @@ from app.routes.parroquia_routes import parroquia_bp
 from app.routes.catequista_routes import catequista_bp
 from app.routes.tipo_documento_routes import tipo_documento_bp
 from app.routes.persona_routes import persona_bp
+from app.routes.nivelcatequesis_routes import nivel_bp
+from app.routes.libro_route import libro_bp
 from app.services.catequizando_service import sincronizar_contador
 
 app = Flask(__name__, 
@@ -28,7 +30,8 @@ app.register_blueprint(parroquia_bp)
 app.register_blueprint(catequista_bp)
 app.register_blueprint(tipo_documento_bp)
 app.register_blueprint(persona_bp)
-
+app.register_blueprint(nivel_bp)
+app.register_blueprint(libro_bp)
 
 @app.route('/')
 def index_route():
@@ -66,6 +69,9 @@ with app.app_context():
     sincronizar_contador("usuarios")
     sincronizar_contador("tipos_documento")
     sincronizar_contador("personas")
+    sincronizar_contador("niveles_catequesis")
+    sincronizar_contador("ciclos_catequisticos")
+    sincronizar_contador("libros")
 
 if __name__ == '__main__':
     app.run(debug=True)

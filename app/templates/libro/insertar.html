@@ -70,17 +70,27 @@
   </style>
 </head>
 <body>
-
-  <h1>Registrar Libro</h1>
-
+  <h1>Registrar Nuevo Libro</h1>
   <form method="post">
-    <input name="titulo" placeholder="Título" required>
-    <input name="autor" placeholder="Autor" required>
-    <input name="editorial" placeholder="Editorial" required>
-    <input name="anio_edicion" type="number" placeholder="Año de edición" required>
-    <button type="submit">Guardar</button>
+    <div>
+        <label for="titulo">Título</label>
+        <input id="titulo" name="titulo" placeholder="Título del libro" required>
+    </div>
+    <div>
+        <label for="autor">Autor</label>
+        <input id="autor" name="autor" placeholder="Nombre del autor" required>
+    </div>
+    <div>
+        <label for="editorial">Editorial</label>
+        <input id="editorial" name="editorial" placeholder="Nombre de la editorial" required>
+    </div>
+    <div>
+        <label for="anio_edicion">Año de Edición (Opcional)</label>
+        <input id="anio_edicion" name="anio_edicion" type="number" min="1900" max="2100" placeholder="Ej: 2023">
+    </div>
+    <button type="submit">Guardar Libro</button>
+    <a href="{{ url_for('libro.index') }}" class="cancelar">Cancelar</a>
   </form>
-
 
 </body>
 </html>

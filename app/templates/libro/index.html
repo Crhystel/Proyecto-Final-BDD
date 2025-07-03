@@ -134,14 +134,13 @@
   </style>
 </head>
 <body>
-  <h1>Listado de Libros</h1>
-  <a href="{{ url_for('home') }}" class="boton-regreso">← Regresar</a>
-  <a href="{{ url_for('libro.insertar') }}" class="boton-insertar">+ Nuevo libro</a>
+  <h1>Gestión de Libros</h1>
+  <a href="{{ url_for('bienvenida') }}" class="boton-regreso">← Regresar</a>
+  <a href="{{ url_for('libro.insertar') }}" class="boton-insertar">+ Nuevo Libro</a>
 
   <table>
     <thead>
       <tr>
-        <th>ID</th>
         <th>Título</th>
         <th>Autor</th>
         <th>Editorial</th>
@@ -152,16 +151,17 @@
     <tbody>
       {% for l in libros %}
       <tr>
-        <td>{{ l.id_libro }}</td>
-        <td>{{ l.titulo }}</td>
+        <td><strong>{{ l.titulo }}</strong></td>
         <td>{{ l.autor }}</td>
         <td>{{ l.editorial }}</td>
-        <td>{{ l.anio_edicion }}</td>
+        <td>{{ l.anio_edicion or 'N/A' }}</td>
         <td class="acciones">
-          <a href="{{ url_for('libro.actualizar', id=l.id_libro) }}" class="editar">Editar</a>
-          <a href="{{ url_for('libro.eliminar', id=l.id_libro) }}" class="eliminar">Eliminar</a>
+          <a href="{{ url_for('libro.actualizar', id=l._id) }}" class="editar">Editar</a>
+          <a href="{{ url_for('libro.confirmar_eliminar', id=l._id) }}" class="eliminar">Eliminar</a>
         </td>
       </tr>
+      {% else %}
+        <tr><td colspan="5" style="text-align:center;">No hay libros registrados.</td></tr>
       {% endfor %}
     </tbody>
   </table>

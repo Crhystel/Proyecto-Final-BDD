@@ -95,10 +95,16 @@
   </style>
 </head>
 <body>
-<h1>¿Estás seguro que deseas eliminar este libro?</h1>
-<form method="post">
-    <button type="submit">Eliminar</button>
-    <a href="{{ url_for('libro.index') }}">Cancelar</a>
-</form>
+  <div class="container">
+    <h1>¿Confirmas la eliminación?</h1>
+    <p>Estás a punto de eliminar el libro <strong>"{{ libro.titulo }}"</strong>. Esta acción no se puede deshacer.</p>
+    <!-- CORREGIDO: la acción del form debe apuntar a la ruta de eliminar -->
+    <form method="post" action="{{ url_for('libro.eliminar', id=libro._id) }}">
+        <div class="actions">
+            <button type="submit" class="btn-delete">Sí, Eliminar</button>
+            <a href="{{ url_for('libro.index') }}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+  </div>
 </body>
 </html>
