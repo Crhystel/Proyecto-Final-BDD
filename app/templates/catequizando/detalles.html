@@ -290,79 +290,117 @@
         
         <!-- 3. Sección de Progresos -->
         <div class="page-section">
-            <div class="section-header">
-                <h2 class="section-title">Progresos Académicos</h2>
-                <a href="{{ url_for('catequizando.detalles', id=catequizando._id, editar='progresos' if not seccion_a_editar == 'progresos' else None) }}" class="btn {% if seccion_a_editar == 'progresos' %}btn-secondary{% else %}btn-edit{% endif %}">
-                    {% if seccion_a_editar == 'progresos' %}Cancelar Edición{% else %}Editar Progresos{% endif %}
-                </a>
+    <div class="section-header">
+        <h2 class="section-title">Progresos Académicos</h2>
+        <a href="{{ url_for('catequizando.detalles', id=catequizando._id, editar='progresos' if not seccion_a_editar == 'progresos' else None) }}" class="btn {% if seccion_a_editar == 'progresos' %}btn-secondary{% else %}btn-edit{% endif %}">
+            {% if seccion_a_editar == 'progresos' %}Cancelar Edición{% else %}Editar Progresos{% endif %}
+        </a>
+    </div>
+    
+    {% set seccion = 'progresos' %}
+    {% if seccion_a_editar == seccion %}
+         <!-- MODO EDICIÓN -->
+         <form method="post" action="{{ url_for('catequizando.actualizar_multiples_progresos', id_catequizando=catequizando._id) }}">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead><tr><th>Nivel</th><th>Catequista</th><th>Fecha Fin</th><th>Intento</th><th style="text-align:center;">Aprobado</th></tr></thead>
+                    <tbody>
+                        {% for item in catequizando.progresos or [] %}
+                        <tr>
+                            <td>
+                                <select name="nivel_ref_{{ item._id }}">
+                                    <option value="">-- Sin Nivel --</option>
+                                    {% for n in todos_los_niveles %}
+                                        <option value="{{ n._id }}" {% if n._id == item.nivel_ref %}selected{% endif %}>
+                                            {{ n.nombre_nivel }}  <!-- CORRECCIÓN APLICADA -->
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="catequista_aprobador_ref_{{ item._id }}">
+                                    <option value="">No asignado</option>
+                                    {% for c in todos_los_catequistas %}
+                                        <option value="{{ c._id }}" {% if c._id == item.catequista_aprobador_ref %}selected{% endif %}>
+                                            {{c.nombre}} {{c.apellido}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input type="date" name="fecha_fin_{{ item._id }}" value="{{ item.fecha_fin.strftime('%Y-%m-%d') if item.fecha_fin else '' }}"></td>
+                            <td><input type="number" name="intento_{{ item._id }}" value="{{ item.intento or '1' }}" min="1"></td>
+                            <td style="text-align: center;"><input type="checkbox" name="aprobado_{{ item._id }}" {% if item.aprobado %}checked{% endif %} class="checkbox-group"></td>
+                        </tr>
+                        {% else %}
+                        <tr class="no-data-row"><td colspan="5">No hay progresos para editar.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            
-            {% set seccion = 'progresos' %}
-            {% if seccion_a_editar == seccion %}
-                 <form method="post" action="{{ url_for('catequizando.actualizar_multiples_progresos', id_catequizando=catequizando._id) }}">
-                    <div class="table-wrapper">
-                        <table class="data-table">
-                            <thead><tr><th>Nivel</th><th>Catequista</th><th>Fecha Fin</th><th>Intento</th><th style="text-align:center;">Aprobado</th></tr></thead>
-                            <tbody>
-                                {% for item in catequizando.progresos or [] %}
-                                <tr>
-                                    <td><select name="nivel_ref_{{ item._id }}">{% for n in todos_los_niveles %}<option value="{{ n._id }}" {% if n._id == item.nivel_ref %}selected{% endif %}>{{ n.nombre }}</option>{% endfor %}</select></td>
-                                    <td><select name="catequista_aprobador_ref_{{ item._id }}"><option value="">No asignado</option>{% for c in todos_los_catequistas %}<option value="{{ c._id }}" {% if c._id == item.catequista_aprobador_ref %}selected{% endif %}>{{c.nombre}} {{c.apellido}}</option>{% endfor %}</select></td>
-                                    <td><input type="date" name="fecha_fin_{{ item._id }}" value="{{ item.fecha_fin.strftime('%Y-%m-%d') if item.fecha_fin else '' }}"></td>
-                                    <td><input type="number" name="intento_{{ item._id }}" value="{{ item.intento or '1' }}" min="1"></td>
-                                    <td style="text-align: center;"><input type="checkbox" name="aprobado_{{ item._id }}" {% if item.aprobado %}checked{% endif %} class="checkbox-group"></td>
-                                </tr>
-                                {% else %}
-                                <tr class="no-data-row"><td colspan="5">No hay progresos para editar.</td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Guardar Cambios</button>
-                </form>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Guardar Cambios</button>
+        </form>
 
-            {% else %}
-                <!-- MODO VISTA -->
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead><tr><th>Nivel</th><th>Catequista</th><th>Fecha Fin</th><th>Intento</th><th>Aprobado</th><th class="cell-actions">Acciones</th></tr></thead>
-                        <tbody>
-                            {% for item in catequizando.progresos or [] %}
-                            <tr>
-                                <td>
-                                    {% set nivel_encontrado = (todos_los_niveles | selectattr('_id', 'equalto', item.nivel_ref) | list | first) %}
-                                    {{ nivel_encontrado.nombre if nivel_encontrado else 'N/A' }}
-                                </td>
-                                <td>
-                                    {% set catequista_encontrado = (todos_los_catequistas | selectattr('_id', 'equalto', item.catequista_aprobador_ref) | list | first) %}
-                                    {{ catequista_encontrado.nombre if catequista_encontrado else 'N/A' }}
-                                </td>
-                                <td>{{ item.fecha_fin.strftime('%d/%m/%Y') if item.fecha_fin else 'En curso' }}</td>
-                                <td>{{ item.intento or '1' }}</td>
-                                <td><span class="status-{{ 'aprobado' if item.aprobado else 'pendiente' }}">{{ 'Sí' if item.aprobado else 'No' }}</span></td>
-                                <td class="cell-actions">
-                                    {% if item.aprobado %}<a href="{{ url_for('catequizando.ver_certificado_progreso', id_catequizando=catequizando._id, id_progreso=item._id) }}" class="btn btn-certificado" target="_blank">Certificado</a>{% endif %}
-                                    <form method="post" action="{{ url_for('catequizando.eliminar_progreso_route', id_catequizando=catequizando._id, id_progreso=item._id) }}" onsubmit="return confirm('¿Eliminar este registro de progreso?');"><button type="submit" class="btn btn-danger">Eliminar</button></form>
-                                </td>
-                            </tr>
-                            {% else %}<tr class="no-data-row"><td colspan="6">No hay progresos registrados.</td></tr>{% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <hr>
-                <form method="post" action="{{ url_for('catequizando.agregar_progreso_route', id_catequizando=catequizando._id) }}">
-                    <h3 class="section-subtitle">Añadir Nuevo Progreso</h3>
-                    <div class="form-grid">
-                        <div><label>Nivel:</label><select name="id_nivel_progreso" required><option value="">Seleccionar</option>{% for n in todos_los_niveles %}<option value="{{ n._id }}">{{ n.nombre }}</option>{% endfor %}</select></div>
-                        <div><label>Catequista Aprobador:</label><select name="id_catequista_aprobador" required><option value="">Seleccionar</option>{% for c in todos_los_catequistas %}<option value="{{ c._id }}">{{c.nombre}} {{c.apellido}}</option>{% endfor %}</select></div>
-                        <div><label>Intento:</label><input type="number" name="intento" value="1" min="1" required></div>
-                    </div>
-                    <div class="checkbox-group" style="margin-top: 15px;"><input type="checkbox" name="aprobado" id="aprobado_progreso"><label for="aprobado_progreso">Marcar como Aprobado</label></div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Añadir Progreso</button>
-                </form>
-            {% endif %}
+    {% else %}
+        <!-- MODO VISTA -->
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead><tr><th>Nivel</th><th>Catequista</th><th>Fecha Fin</th><th>Intento</th><th>Aprobado</th><th class="cell-actions">Acciones</th></tr></thead>
+                <tbody>
+                    {% for item in catequizando.progresos or [] %}
+                    <tr>
+                        <td>
+                            <!-- CORRECCIÓN APLICADA: Usa el campo enriquecido directamente -->
+                            {{ item.nombre_nivel or 'N/A' }}
+                        </td>
+                        <td>
+                            <!-- CORRECCIÓN APLICADA: Usa el campo enriquecido directamente -->
+                            {{ item.nombre_catequista or 'N/A' }}
+                        </td>
+                        <td>{{ item.fecha_fin.strftime('%d/%m/%Y') if item.fecha_fin else 'En curso' }}</td>
+                        <td>{{ item.intento or '1' }}</td>
+                        <td><span class="status-{{ 'aprobado' if item.aprobado else 'pendiente' }}">{{ 'Sí' if item.aprobado else 'No' }}</span></td>
+                        <td class="cell-actions">
+                            {% if item.aprobado %}<a href="{{ url_for('catequizando.ver_certificado_progreso', id_catequizando=catequizando._id, id_progreso=item._id) }}" class="btn btn-certificado" target="_blank">Certificado</a>{% endif %}
+                            <form method="post" action="{{ url_for('catequizando.eliminar_progreso_route', id_catequizando=catequizando._id, id_progreso=item._id) }}" onsubmit="return confirm('¿Eliminar este registro de progreso?');"><button type="submit" class="btn btn-danger">Eliminar</button></form>
+                        </td>
+                    </tr>
+                    {% else %}<tr class="no-data-row"><td colspan="6">No hay progresos registrados.</td></tr>{% endfor %}
+                </tbody>
+            </table>
         </div>
-
+        <hr>
+        <form method="post" action="{{ url_for('catequizando.agregar_progreso_route', id_catequizando=catequizando._id) }}">
+            <h3 class="section-subtitle">Añadir Nuevo Progreso</h3>
+            <div class="form-grid">
+                <div>
+                    <label>Nivel:</label>
+                    <select name="id_nivel_progreso" required>
+                        <option value="">Seleccionar</option>
+                        {% for n in todos_los_niveles %}
+                            <!-- CORRECCIÓN APLICADA -->
+                            <option value="{{ n._id }}">{{ n.nombre_nivel }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Catequista Aprobador:</label>
+                    <select name="id_catequista_aprobador" required>
+                        <option value="">Seleccionar</option>
+                        {% for c in todos_los_catequistas %}
+                            <option value="{{ c._id }}">{{c.nombre}} {{c.apellido}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Intento:</label>
+                    <input type="number" name="intento" value="1" min="1" required>
+                </div>
+            </div>
+            <div class="checkbox-group" style="margin-top: 15px;"><input type="checkbox" name="aprobado" id="aprobado_progreso"><label for="aprobado_progreso">Marcar como Aprobado</label></div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Añadir Progreso</button>
+        </form>
+    {% endif %}
+</div>
         <!-- 4. Sección de Documentos Digitales -->
         <div class="page-section">
             <div class="section-header">
@@ -436,78 +474,137 @@
         </div>
         
         <!-- 5. Sección de Asistencias -->
-        <div class="page-section">
-            <div class="section-header">
-                <h2 class="section-title">Asistencias</h2>
-                <a href="{{ url_for('catequizando.detalles', id=catequizando._id, editar='asistencias' if not seccion_a_editar == 'asistencias' else None) }}" class="btn {% if seccion_a_editar == 'asistencias' %}btn-secondary{% else %}btn-edit{% endif %}">
-                    {% if seccion_a_editar == 'asistencias' %}Cancelar Edición{% else %}Editar Asistencias{% endif %}
-                </a>
-            </div>
+        <!-- 5. Sección de Asistencias -->
+<div class="page-section">
+    <div class="section-header">
+        <h2 class="section-title">Asistencias</h2>
+        <a href="{{ url_for('catequizando.detalles', id=catequizando._id, editar='asistencias' if not seccion_a_editar == 'asistencias' else None) }}" class="btn {% if seccion_a_editar == 'asistencias' %}btn-secondary{% else %}btn-edit{% endif %}">
+            {% if seccion_a_editar == 'asistencias' %}Cancelar Edición{% else %}Editar Asistencias{% endif %}
+        </a>
+    </div>
 
-            {% set seccion = 'asistencias' %}
-            {% if seccion_a_editar == seccion %}
-                <!-- MODO EDICIÓN -->
-                <form method="post" action="{{ url_for('catequizando.actualizar_multiples_asistencias', id_catequizando=catequizando._id) }}">
-                    <div class="table-wrapper">
-                        <table class="data-table">
-                            <thead><tr><th>Fecha</th><th>Estado</th><th>Nivel</th><th>Grupo</th><th>Tomada por</th></tr></thead>
-                            <tbody>
-                                {% for item in catequizando[seccion] or [] %}
-                                <tr>
-                                    <td><input type="date" name="fecha_{{ item._id }}" value="{{ item.fecha.strftime('%Y-%m-%d') if item.fecha else '' }}"></td>
-                                    <td><select name="estado_{{ item._id }}"><option value="A" {% if item.estado == 'A' %}selected{% endif %}>Asistió</option><option value="F" {% if item.estado == 'F' %}selected{% endif %}>Faltó</option><option value="J" {% if item.estado == 'J' %}selected{% endif %}>Justificado</option></select></td>
-                                    <td><select name="nivel_ref_{{ item._id }}">{% for n in todos_los_niveles %}<option value="{{ n._id }}" {% if n._id == item.nivel_ref %}selected{% endif %}>{{ n.nombre }}</option>{% endfor %}</select></td>
-                                    <td><select name="grupo_ref_{{ item._id }}"><option value="">-- Sin Grupo --</option>{% for g in grupos_disponibles %}<option value="{{ g._id }}" {% if g._id == item.grupo_ref %}selected{% endif %}>{{ g.nombre }}</option>{% endfor %}</select></td>
-                                    <td><select name="catequista_ref_{{ item._id }}"><option value="">No asignado</option>{% for c in todos_los_catequistas %}<option value="{{ c._id }}" {% if c._id == item.catequista_ref %}selected{% endif %}>{{ c.nombre }} {{ c.apellido }}</option>{% endfor %}</select></td>
-                                </tr>
-                                {% else %}<tr class="no-data-row"><td colspan="5">No hay asistencias para editar.</td></tr>{% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Guardar Cambios</button>
-                </form>
-            {% else %}
-                <!-- MODO VISTA -->
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead><tr><th>Fecha</th><th>Estado</th><th>Nivel</th><th>Grupo</th><th>Tomada por</th><th class="cell-actions">Acciones</th></tr></thead>
-                        <tbody>
-                            {% for item in catequizando[seccion] or [] %}
-                            <tr>
-                                <td>{{ item.fecha.strftime('%d/%m/%Y') if item.fecha else 'N/A' }}</td>
-                                <td>{{ {'A':'Asistió', 'F':'Faltó', 'J':'Justificado'}.get(item.estado, 'N/A') }}</td>
-                                <td>
-                                    {% set nivel_encontrado = (todos_los_niveles | selectattr('_id', 'equalto', item.nivel_ref) | list | first) %}
-                                    {{ nivel_encontrado.nombre if nivel_encontrado else 'N/A' }}
-                                </td>
-                                <td>
-                                    {% set grupo_encontrado = (grupos_disponibles | selectattr('_id', 'equalto', item.grupo_ref) | list | first) %}
-                                    {{ grupo_encontrado.nombre if grupo_encontrado else 'N/A' }}
-                                </td>
-                                <td>
-                                    {% set catequista_encontrado = (todos_los_catequistas | selectattr('_id', 'equalto', item.catequista_ref) | list | first) %}
-                                    {{ catequista_encontrado.nombre if catequista_encontrado else 'N/A' }}
-                                </td>
-                                <td class="cell-actions"><form method="post" action="{{ url_for('catequizando.eliminar_asistencia_route', id_catequizando=catequizando._id, id_asistencia=item._id) }}" onsubmit="return confirm('¿Eliminar esta asistencia?');"><button type="submit" class="btn btn-danger">Eliminar</button></form></td>
-                            </tr>
-                            {% else %}<tr class="no-data-row"><td colspan="6">No hay asistencias registradas.</td></tr>{% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <hr>
-                <form method="post" action="{{ url_for('catequizando.registrar_asistencia_route', id_catequizando=catequizando._id) }}">
-                    <h3 class="section-subtitle">Registrar Nueva Asistencia</h3>
-                    <div class="form-grid">
-                        <div><label>Fecha:</label><input type="date" name="fecha_asistencia" required></div>
-                        <div><label>Estado:</label><select name="estado_asistencia"><option value="A" selected>Asistió</option><option value="F">Faltó</option><option value="J">Justificado</option></select></div>
-                        <div><label>Nivel:</label><select name="id_nivel_asistencia">{% for n in todos_los_niveles %}<option value="{{ n._id }}">{{ n.nombre }}</option>{% endfor %}</select></div>
-                        <div><label>Grupo:</label><select name="id_grupo_asistencia">{% for g in grupos_disponibles %}<option value="{{ g._id }}">{{ g.nombre }}</option>{% endfor %}</select></div>
-                    </div>
-                    <div style="margin-top: 15px;"><label>Asistencia tomada por:</label><select name="id_catequista" required><option value="">Seleccionar Catequista</option>{% for c in todos_los_catequistas %}<option value="{{ c._id }}">{{ c.nombre }} {{ c.apellido }}</option>{% endfor %}</select></div>
-                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Registrar</button>
-                </form>
-            {% endif %}
+    {% set seccion = 'asistencias' %}
+    {% if seccion_a_editar == seccion %}
+        <!-- MODO EDICIÓN -->
+        <form method="post" action="{{ url_for('catequizando.actualizar_multiples_asistencias', id_catequizando=catequizando._id) }}">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead><tr><th>Fecha</th><th>Estado</th><th>Nivel</th><th>Grupo</th><th>Tomada por</th></tr></thead>
+                    <tbody>
+                        {% for item in catequizando[seccion] or [] %}
+                        <tr>
+                            <td><input type="date" name="fecha_{{ item._id }}" value="{{ item.fecha.strftime('%Y-%m-%d') if item.fecha else '' }}"></td>
+                            <td>
+                                <select name="estado_{{ item._id }}">
+                                    <option value="A" {% if item.estado == 'A' %}selected{% endif %}>Asistió</option>
+                                    <option value="F" {% if item.estado == 'F' %}selected{% endif %}>Faltó</option>
+                                    <option value="J" {% if item.estado == 'J' %}selected{% endif %}>Justificado</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="nivel_ref_{{ item._id }}">
+                                    <option value="">-- Sin Nivel --</option>
+                                    {% for n in todos_los_niveles %}
+                                        <option value="{{ n._id }}" {% if n._id == item.nivel_ref %}selected{% endif %}>
+                                            {{ n.nombre_nivel }} <!-- CORRECCIÓN -->
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="grupo_ref_{{ item._id }}">
+                                    <option value="">-- Sin Grupo --</option>
+                                    {% for g in grupos_disponibles %}
+                                        <option value="{{ g._id }}" {% if g._id == item.grupo_ref %}selected{% endif %}>
+                                            {{ g.nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="catequista_ref_{{ item._id }}">
+                                    <option value="">No asignado</option>
+                                    {% for c in todos_los_catequistas %}
+                                        <option value="{{ c._id }}" {% if c._id == item.catequista_ref %}selected{% endif %}>
+                                            {{ c.nombre }} {{ c.apellido }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        {% else %}<tr class="no-data-row"><td colspan="5">No hay asistencias para editar.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Guardar Cambios</button>
+        </form>
+    {% else %}
+        <!-- MODO VISTA -->
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead><tr><th>Fecha</th><th>Estado</th><th>Nivel</th><th>Grupo</th><th>Tomada por</th><th class="cell-actions">Acciones</th></tr></thead>
+                <tbody>
+                    {% for item in catequizando[seccion] or [] %}
+                    <tr>
+                        <td>{{ item.fecha.strftime('%d/%m/%Y') if item.fecha else 'N/A' }}</td>
+                        <td>{{ {'A':'Asistió', 'F':'Faltó', 'J':'Justificado'}.get(item.estado, 'N/A') }}</td>
+                        <td>
+                            <!-- CORRECCIÓN: Usar campo enriquecido -->
+                            {{ item.nombre_nivel or 'N/A' }}
+                        </td>
+                        <td>
+                            <!-- CORRECCIÓN: Búsqueda del grupo sigue siendo en la plantilla, lo cual está bien -->
+                            {% set grupo_encontrado = (grupos_disponibles | selectattr('_id', 'equalto', item.grupo_ref) | list | first) %}
+                            {{ grupo_encontrado.nombre if grupo_encontrado else 'N/A' }}
+                        </td>
+                        <td>
+                            <!-- CORRECCIÓN: Usar campo enriquecido -->
+                            {{ item.nombre_catequista or 'N/A' }}
+                        </td>
+                        <td class="cell-actions"><form method="post" action="{{ url_for('catequizando.eliminar_asistencia_route', id_catequizando=catequizando._id, id_asistencia=item._id) }}" onsubmit="return confirm('¿Eliminar esta asistencia?');"><button type="submit" class="btn btn-danger">Eliminar</button></form></td>
+                    </tr>
+                    {% else %}<tr class="no-data-row"><td colspan="6">No hay asistencias registradas.</td></tr>{% endfor %}
+                </tbody>
+            </table>
         </div>
+        <hr>
+        <form method="post" action="{{ url_for('catequizando.registrar_asistencia_route', id_catequizando=catequizando._id) }}">
+            <h3 class="section-subtitle">Registrar Nueva Asistencia</h3>
+            <div class="form-grid">
+                <div><label>Fecha:</label><input type="date" name="fecha_asistencia" required></div>
+                <div><label>Estado:</label><select name="estado_asistencia"><option value="A" selected>Asistió</option><option value="F">Faltó</option><option value="J">Justificado</option></select></div>
+                <div>
+                    <label>Nivel:</label>
+                    <select name="id_nivel_asistencia">
+                        <option value="">-- Opcional --</option>
+                        {% for n in todos_los_niveles %}
+                            <option value="{{ n._id }}">{{ n.nombre_nivel }}</option> <!-- CORRECCIÓN -->
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Grupo:</label>
+                    <select name="id_grupo_asistencia">
+                        <option value="">-- Opcional --</option>
+                        {% for g in grupos_disponibles %}
+                            <option value="{{ g._id }}">{{ g.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <label>Asistencia tomada por:</label>
+                <select name="id_catequista" required>
+                    <option value="">Seleccionar Catequista</option>
+                    {% for c in todos_los_catequistas %}
+                        <option value="{{ c._id }}">{{ c.nombre }} {{ c.apellido }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Registrar</button>
+        </form>
+    {% endif %}
+</div>
 
         <!-- 6. Sección de Sesiones Especiales -->
         <div class="page-section">

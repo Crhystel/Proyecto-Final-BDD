@@ -86,10 +86,60 @@ def obtener_catequizandos():
     ]
     return list(db.catequizandos.aggregate(pipeline))
 
+
+
 def obtener_catequizando_por_id(id_catequizando):
     db = get_db_connection()
-    return db.catequizandos.find_one({"_id": int(id_catequizando)})
+    try:
+        id_num = int(id_catequizando)
+    except (ValueError, TypeError):
+        return None
 
+    pipeline = [
+        {"$match": {"_id": id_num}},
+
+        {"$lookup": {"from": "niveles_catequesis", "localField": "progresos.nivel_ref", "foreignField": "_id", "as": "temp_niveles_progreso"}},
+        {"$lookup": {"from": "catequistas", "localField": "progresos.catequista_aprobador_ref", "foreignField": "_id", "as": "temp_catequistas_progreso"}},
+        {"$lookup": {"from": "niveles_catequesis", "localField": "asistencias.nivel_ref", "foreignField": "_id", "as": "temp_niveles_asistencia"}},
+        {"$lookup": {"from": "catequistas", "localField": "asistencias.catequista_ref", "foreignField": "_id", "as": "temp_catequistas_asistencia"}},
+
+        {"$addFields": {
+            "progresos": {
+                "$map": {
+                    "input": "$progresos", "as": "prog", "in": {
+                        "$mergeObjects": [
+                            "$$prog",
+                            {
+                                "nombre_nivel": {"$let": {"vars": {"nivel": {"$arrayElemAt": [{"$filter": {"input": "$temp_niveles_progreso", "as": "n", "cond": {"$eq": ["$$n._id", "$$prog.nivel_ref"]}}}, 0]}}, "in": "$$nivel.nombre_nivel"}},
+                                "nombre_catequista": {"$let": {"vars": {"catequista": {"$arrayElemAt": [{"$filter": {"input": "$temp_catequistas_progreso", "as": "c", "cond": {"$eq": ["$$c._id", "$$prog.catequista_aprobador_ref"]}}}, 0]}}, "in": {"$concat": ["$$catequista.nombre", " ", "$$catequista.apellido"]}}}
+                            }
+                        ]
+                    }
+                }
+            },
+            "asistencias": {
+                "$map": {
+                    "input": "$asistencias", "as": "asis", "in": {
+                        "$mergeObjects": [
+                            "$$asis",
+                            {
+                                "nombre_nivel": {"$let": {"vars": {"nivel": {"$arrayElemAt": [{"$filter": {"input": "$temp_niveles_asistencia", "as": "n", "cond": {"$eq": ["$$n._id", "$$asis.nivel_ref"]}}}, 0]}}, "in": "$$nivel.nombre_nivel"}},
+                                "nombre_catequista": {"$let": {"vars": {"catequista": {"$arrayElemAt": [{"$filter": {"input": "$temp_catequistas_asistencia", "as": "c", "cond": {"$eq": ["$$c._id", "$$asis.catequista_ref"]}}}, 0]}}, "in": {"$concat": ["$$catequista.nombre", " ", "$$catequista.apellido"]}}}
+                            }
+                        ]
+                    }
+                }
+            }
+        }},
+
+        {"$project": {
+            "temp_niveles_progreso": 0, "temp_catequistas_progreso": 0,
+            "temp_niveles_asistencia": 0, "temp_catequistas_asistencia": 0
+        }}
+    ]
+
+    resultado = list(db.catequizandos.aggregate(pipeline))
+    return resultado[0] if resultado else None
 def actualizar_catequizando_principal(id_catequizando, datos_actualizacion):
     db = get_db_connection()
     id_num = int(id_catequizando)
